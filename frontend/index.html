@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KANBAN - SGGE</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===================== CABEÇALHO ===================== -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <img src="assets/logo-gge.png" alt="Logo GGE" class="logo-gge">
+    </div>
+    <h1 class="topbar-title">KANBAN - SGGE</h1>
+
+    <!-- Navegação do cabeçalho: "Resumo dos núcleos" troca para a tela de gestão geral;
+         os botões de núcleo trocam para a tabela operacional daquele núcleo -->
+    <nav class="nav-nucleos" id="nav-nucleos">
+      <button class="btn-nucleo btn-resumo-nucleos-nav" id="btn-resumo-nucleos" data-view="resumo">Resumo dos núcleos</button>
+      <button class="btn-nucleo" data-nucleo="Núcleo 1">Núcleo 1</button>
+      <button class="btn-nucleo" data-nucleo="Núcleo 2">Núcleo 2</button>
+      <button class="btn-nucleo" data-nucleo="Núcleo 3">Núcleo 3</button>
+      <button class="btn-nucleo" data-nucleo="Núcleo 4">Núcleo 4</button>
+      <button class="btn-nucleo" data-nucleo="Núcleo 5">Núcleo 5</button>
+      <button class="btn-nucleo" data-nucleo="Núcleo 6">Núcleo 6</button>
+    </nav>
+  </header>
+
+  <!-- ===================== TELA: RESUMO DOS NÚCLEOS (VISÃO GERENCIAL DE TODOS OS SETORES) ===================== -->
+  <section id="tela-resumo-nucleos" class="tela-resumo-nucleos oculto">
+    <h2 class="tela-resumo-titulo">Resumo dos núcleos</h2>
+
+    <!-- Cards gerais: somam as demandas de TODOS os núcleos/setores -->
+    <div class="resumo-geral-cards">
+      <div class="resumo-card resumo-card-total">
+        <span class="resumo-numero" id="resumo-geral-total">0</span>
+        <span class="resumo-label">Total de demandas</span>
+      </div>
+      <div class="resumo-card resumo-processo">
+        <span class="resumo-numero" id="resumo-geral-processo">0</span>
+        <span class="resumo-label">Em processo</span>
+      </div>
+      <div class="resumo-card resumo-atrasado resumo-card-destaque">
+        <span class="resumo-numero" id="resumo-geral-atrasadas">0</span>
+        <span class="resumo-label">Atrasadas</span>
+      </div>
+      <div class="resumo-card resumo-finalizado">
+        <span class="resumo-numero" id="resumo-geral-finalizadas">0</span>
+        <span class="resumo-label">Finalizadas</span>
+      </div>
+    </div>
+
+    <!-- Alternância entre as visões internas do "Resumo dos núcleos" -->
+    <div class="resumo-acoes-secundarias">
+      <button id="btn-visao-equipe" class="btn-toggle-resumo ativo">Visão da equipe</button>
+      <button id="btn-kanban-visual-geral" class="btn-toggle-resumo">Kanban Visual Geral</button>
+      <button id="btn-equipe-diagramacao" class="btn-toggle-resumo">Equipe de Diagramação</button>
+    </div>
+
+    <!-- ===================== VISÃO: EQUIPE (demandas críticas + diagramadores) ===================== -->
+    <div id="resumo-visao-equipe">
+      <!-- Atividades atrasadas: status ATRASADO, ou Previsto vencido sem Fim preenchido -->
+      <section class="demandas-criticas">
+        <h3 class="demandas-criticas-titulo">Atividades atrasadas</h3>
+        <div class="demandas-criticas-lista" id="lista-demandas-criticas">
+          <!-- Itens gerados dinamicamente em script.js -->
+        </div>
+      </section>
+
+      <div class="resumo-equipe-colunas">
+        <div class="resumo-equipe-coluna">
+          <h3 class="resumo-equipe-subtitulo">Diagramadores livres</h3>
+          <p class="resumo-equipe-descricao">Profissionais disponíveis para novas demandas.</p>
+          <div class="resumo-equipe-etiquetas" id="lista-diagramadores-livres">
+            <!-- Etiquetas geradas dinamicamente em script.js -->
+          </div>
+        </div>
+        <div class="resumo-equipe-coluna">
+          <h3 class="resumo-equipe-subtitulo">Diagramadores com atividade</h3>
+          <p class="resumo-equipe-descricao">Profissionais com demandas em andamento.</p>
+          <div class="resumo-equipe-etiquetas" id="lista-diagramadores-ocupados">
+            <!-- Etiquetas geradas dinamicamente em script.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== VISÃO: EQUIPE DE DIAGRAMAÇÃO (EXPERIÊNCIA INSTITUCIONAL) ===================== -->
+    <div id="resumo-visao-equipe-diagramacao" class="oculto team-showcase-view">
+
+      <!-- Bloco 1: Hero com nav integrada como overlay -->
+      <div class="team-hero">
+
+        <!-- Nav bar como overlay dentro do hero — não cria faixa separada -->
+        <div class="team-nav-bar">
+          <button id="btn-voltar-resumo-equipe" class="team-back-btn">
+            &#8592; Resumo dos núcleos
+          </button>
+        </div>
+
+        <!-- Decorações de fundo do hero -->
+        <div class="team-hero-orb team-hero-orb-1" aria-hidden="true"></div>
+        <div class="team-hero-orb team-hero-orb-2" aria-hidden="true"></div>
+        <div class="team-hero-orb team-hero-orb-3" aria-hidden="true"></div>
+
+        <!-- Conteúdo do hero -->
+        <div class="team-hero-body">
+          <div class="team-hero-content">
+            <p class="team-hero-eyebrow">GGE · Sistema de Ensino</p>
+            <h2 class="team-hero-titulo">Equipe de<br>Diagramação</h2>
+            <p class="team-hero-subtitulo">Conheça os profissionais que movimentam o fluxo de produção dos materiais.</p>
+            <p class="team-hero-descricao">Mais do que demandas e prazos, este painel representa pessoas, talento e colaboração diária na construção do ensino.</p>
+          </div>
+          <div class="team-hero-art" aria-hidden="true">
+            <div class="team-hero-art-ring team-hero-art-ring-1"></div>
+            <div class="team-hero-art-ring team-hero-art-ring-2"></div>
+            <div class="team-hero-art-ring team-hero-art-ring-3"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bloco 2: Carrossel da equipe -->
+      <div class="team-carousel-section">
+        <div class="team-carousel-header">
+          <span class="team-carousel-label">Profissionais da equipe</span>
+          <span class="team-carousel-count" id="team-carousel-count"></span>
+        </div>
+        <div class="equipe-carousel-wrapper">
+          <button class="equipe-carousel-btn equipe-carousel-prev" aria-label="Anterior">&#8249;</button>
+          <div class="equipe-carousel" id="equipeCarousel">
+            <!-- Cards gerados dinamicamente por renderizarCarrosselEquipe() -->
+          </div>
+          <button class="equipe-carousel-btn equipe-carousel-next" aria-label="Próximo">&#8250;</button>
+        </div>
+      </div>
+
+      <!-- Bloco 3: Faixa institucional final -->
+      <div class="team-footer-frase">
+        <div class="team-footer-linha" aria-hidden="true"></div>
+        <span class="team-footer-frase-texto">Cada entrega começa com pessoas comprometidas com a excelência.</span>
+        <div class="team-footer-linha" aria-hidden="true"></div>
+      </div>
+
+    </div>
+
+    <!-- ===================== VISÃO: KANBAN VISUAL GERAL (TODOS OS NÚCLEOS AO MESMO TEMPO) ===================== -->
+    <div id="resumo-visao-kanban-geral" class="oculto">
+      <div class="kanban-geral-controles">
+        <label for="select-filtro-nucleo-kanban-geral">Filtrar núcleo:</label>
+        <select id="select-filtro-nucleo-kanban-geral">
+          <option value="todos">Todos os núcleos</option>
+          <option value="Núcleo 1">Núcleo 1</option>
+          <option value="Núcleo 2">Núcleo 2</option>
+          <option value="Núcleo 3">Núcleo 3</option>
+          <option value="Núcleo 4">Núcleo 4</option>
+          <option value="Núcleo 5">Núcleo 5</option>
+          <option value="Núcleo 6">Núcleo 6</option>
+        </select>
+      </div>
+      <div class="kanban-geral-nucleos" id="kanban-geral-nucleos">
+        <!-- Blocos por núcleo gerados dinamicamente em script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TELA: TABELA OPERACIONAL DO NÚCLEO SELECIONADO ===================== -->
+  <div id="tela-operacional">
+
+    <!-- ===================== CARDS GERAIS ===================== -->
+    <section class="resumo">
+      <div class="resumo-card">
+        <span class="resumo-numero" id="resumo-total">0</span>
+        <span class="resumo-label">Total de demandas</span>
+      </div>
+      <div class="resumo-card">
+        <span class="resumo-numero" id="resumo-processo">0</span>
+        <span class="resumo-label">Em processo</span>
+      </div>
+      <div class="resumo-card resumo-atrasado">
+        <span class="resumo-numero" id="resumo-atrasadas">0</span>
+        <span class="resumo-label">Atrasadas</span>
+      </div>
+      <div class="resumo-card resumo-finalizado">
+        <span class="resumo-numero" id="resumo-finalizadas">0</span>
+        <span class="resumo-label">Finalizadas</span>
+      </div>
+    </section>
+
+    <!-- ===================== BARRA OPERACIONAL: KANBAN VISUAL + PLANILHAS AUXILIARES + FILTROS ===================== -->
+    <section class="acoes">
+      <div class="acoes-botoes">
+        <button id="btn-kanban-visual" class="btn-primario">Kanban Visual</button>
+        <button id="btn-solicitacao-imagens" class="btn-primario btn-acao-compacto">Solicitação de imagens</button>
+        <button id="btn-solicitacao-qrs" class="btn-primario btn-acao-compacto">Solicitação de QRs</button>
+        <button id="btn-solicitacao-ilustracao" class="btn-primario btn-acao-compacto">Solicitação de ilustração</button>
+      </div>
+
+      <div class="filtros">
+        <select id="filtro-diagramador">
+          <option value="">Diagramador (todos)</option>
+        </select>
+
+        <select id="filtro-status">
+          <option value="">Status (todos)</option>
+          <option value="A iniciar">A iniciar</option>
+          <option value="Em processo">Em processo</option>
+          <option value="Pausado">Pausado</option>
+          <option value="Atrasado">Atrasado</option>
+          <option value="Finalizado">Finalizado</option>
+        </select>
+
+        <input type="text" id="filtro-busca" placeholder="Buscar por atividade...">
+      </div>
+    </section>
+
+    <!-- ===================== TABELA OPERACIONAL DO NÚCLEO ===================== -->
+    <main class="quadro" id="quadro">
+      <!-- quadro-scroll isola o overflow-x para não bloquear o sticky do thead -->
+      <div class="quadro-scroll">
+        <table class="tabela-nucleo">
+          <thead>
+            <tr>
+              <th>Diagramador</th>
+              <th>Ano</th>
+              <th>Módulo</th>
+              <th>Frente</th>
+              <th>Atividade</th>
+              <th>Início</th>
+              <th>Previsto</th>
+              <th>Pausa/Prioridade</th>
+              <th>Fim</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="corpo-tabela-nucleo">
+            <!-- Linhas geradas dinamicamente em script.js -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===================== TELA: KANBAN VISUAL (QUADRO POR STATUS DO NÚCLEO SELECIONADO) ===================== -->
+  <section id="tela-kanban-visual" class="tela-kanban-visual oculto">
+    <div class="kanban-visual-cabecalho">
+      <div>
+        <h2 class="kanban-visual-titulo">QUADRO KANBAN - SGGE</h2>
+        <p class="kanban-visual-subtitulo" id="kanban-visual-subtitulo">Núcleo 1</p>
+      </div>
+      <button id="btn-voltar-tabela" class="btn-primario">Voltar para tabela</button>
+    </div>
+
+    <div class="kanban-visual-grade">
+      <div class="kanban-coluna kanban-coluna-backlog">
+        <h3 class="kanban-coluna-titulo">BACKLOG</h3>
+        <div class="kanban-coluna-corpo" id="kanban-coluna-backlog"></div>
+      </div>
+
+      <div class="kanban-coluna kanban-coluna-emprocesso">
+        <h3 class="kanban-coluna-titulo">EM PROCESSO</h3>
+        <div class="kanban-coluna-corpo" id="kanban-coluna-emprocesso"></div>
+      </div>
+
+      <div class="kanban-coluna kanban-coluna-pausado">
+        <h3 class="kanban-coluna-titulo">PAUSADO</h3>
+        <div class="kanban-coluna-corpo" id="kanban-coluna-pausado"></div>
+      </div>
+
+      <div class="kanban-coluna kanban-coluna-prioridade">
+        <h3 class="kanban-coluna-titulo">PRIORIDADE</h3>
+        <div class="kanban-coluna-corpo" id="kanban-coluna-prioridade"></div>
+      </div>
+
+      <div class="kanban-coluna kanban-coluna-finalizado kanban-coluna-larga">
+        <h3 class="kanban-coluna-titulo">FINALIZADO</h3>
+        <div class="kanban-coluna-corpo" id="kanban-coluna-finalizado"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MODAL NOVA DEMANDA ===================== -->
+  <div id="modal-overlay" class="modal-overlay oculto">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-titulo">Nova demanda</h2>
+        <button id="btn-fechar-modal" class="btn-fechar">&times;</button>
+      </div>
+
+      <form id="form-demanda" class="modal-form">
+        <!-- Identifica a linha (núcleo + diagramador + posição) que está sendo editada -->
+        <input type="hidden" id="campo-id-edicao">
+        <input type="hidden" id="campo-slot">
+
+        <label>
+          Núcleo
+          <select id="campo-nucleo">
+            <option value="Núcleo 1">Núcleo 1</option>
+            <option value="Núcleo 2">Núcleo 2</option>
+            <option value="Núcleo 3">Núcleo 3</option>
+            <option value="Núcleo 4">Núcleo 4</option>
+            <option value="Núcleo 5">Núcleo 5</option>
+            <option value="Núcleo 6">Núcleo 6</option>
+            <option value="Ilustração">Ilustração</option>
+          </select>
+        </label>
+
+        <label>
+          Diagramador
+          <select id="campo-diagramador" required></select>
+        </label>
+
+        <label>
+          Ano escolar
+          <select id="campo-ano-escolar">
+            <option value="">Selecione...</option>
+          </select>
+        </label>
+
+        <label>
+          Módulo
+          <select id="campo-modulo">
+            <option value="">Selecione...</option>
+          </select>
+        </label>
+
+        <label>
+          Frente
+          <select id="campo-frente">
+            <option value="">Selecione...</option>
+          </select>
+        </label>
+
+        <label>
+          Atividade
+          <input type="text" id="campo-atividade" required>
+        </label>
+
+        <label>
+          Início
+          <input type="datetime-local" id="campo-inicio">
+        </label>
+
+        <label>
+          Previsto
+          <input type="datetime-local" id="campo-previsto">
+        </label>
+
+        <label>
+          Fim
+          <input type="datetime-local" id="campo-fim">
+        </label>
+
+        <label>
+          Status
+          <select id="campo-status">
+            <option value="A iniciar">A iniciar</option>
+            <option value="Em processo">Em processo</option>
+            <option value="Pausado">Pausado</option>
+            <option value="Atrasado">Atrasado</option>
+            <option value="Finalizado">Finalizado</option>
+          </select>
+        </label>
+
+        <label>
+          Prioridade
+          <select id="campo-prioridade">
+            <option value="Alta">Alta</option>
+            <option value="Média" selected>Média</option>
+            <option value="Baixa">Baixa</option>
+          </select>
+        </label>
+
+        <label class="campo-checkbox">
+          <input type="checkbox" id="campo-pausa">
+          Demanda pausada
+        </label>
+
+        <label>
+          Motivo da pausa
+          <input type="text" id="campo-motivo-pausa">
+        </label>
+
+        <label class="campo-largo">
+          Observações
+          <textarea id="campo-observacoes" rows="3"></textarea>
+        </label>
+
+        <label class="campo-largo">
+          Link do arquivo
+          <input type="url" id="campo-link-arquivo" placeholder="https://...">
+        </label>
+
+        <div class="modal-acoes">
+          <button type="button" id="btn-cancelar" class="btn-secundario">Cancelar</button>
+          <button type="submit" class="btn-primario">Salvar demanda</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== ABERTURA ANIMADA ===================== -->
+  <div id="splashScreen" class="splash-screen">
+    <div class="splash-content">
+      <img src="assets/logo-gge.png" alt="Logo GGE" class="splash-logo">
+      <h1 class="splash-title">KANBAN - SGGE</h1>
+      <p class="splash-subtitle">Carregando painel de produção...</p>
+      <div class="splash-loader"></div>
+      <div class="splash-credit">📊 Desenvolvido por Lucas Diego</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
