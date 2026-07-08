@@ -2242,7 +2242,7 @@ function configurarEventos() {
 // ===================== NAVEGAÇÃO DO CABEÇALHO (TELAS E NÚCLEOS) ===================== //
 
 // Senha que protege o acesso ao Resumo dos núcleos.
-const SENHA_RESUMO_NUCLEOS = "sgge@diaragação@1234";
+const SENHA_RESUMO_NUCLEOS = "sgge@kanban@123";
 
 // Exibe o modal de senha e resolve a Promise com true (acesso liberado) ou false (cancelado).
 function solicitarSenhaResumoNucleos() {
