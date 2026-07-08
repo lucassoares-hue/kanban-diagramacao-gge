@@ -158,13 +158,13 @@ let demandas = [];
 let configuracoes = JSON.parse(JSON.stringify(CONFIGURACOES_EMERGENCIA));
 
 // Núcleo atualmente selecionado na navegação do cabeçalho.
-// Começa vazio: nenhum núcleo é pré-selecionado ao carregar a página.
-let nucleoSelecionado = "";
+// Inicia no Núcleo 1 — tela padrão ao abrir o Kanban.
+let nucleoSelecionado = "Núcleo 1";
 
 // Tela atualmente visível: "resumo" (Resumo dos núcleos), "tabela" (tabela operacional)
 // ou "kanban" (Kanban Visual do núcleo selecionado).
-// Inicia em "resumo" para que a tela de abertura seja sempre o Resumo dos núcleos.
-let telaAtual = "resumo";
+// Inicia em "tabela" — o Núcleo 1 é selecionado na inicialização.
+let telaAtual = "tabela";
 
 // Visualização ativa DENTRO da tela "Resumo dos núcleos".
 // Três estados possíveis:
@@ -2241,11 +2241,66 @@ function configurarEventos() {
 
 // ===================== NAVEGAÇÃO DO CABEÇALHO (TELAS E NÚCLEOS) ===================== //
 
+// Senha que protege o acesso ao Resumo dos núcleos.
+const SENHA_RESUMO_NUCLEOS = "sgge@diaragação@1234";
+
+// Exibe o modal de senha e resolve a Promise com true (acesso liberado) ou false (cancelado).
+function solicitarSenhaResumoNucleos() {
+  return new Promise(function (resolver) {
+    const overlay = document.getElementById("modal-senha-resumo");
+    const input   = document.getElementById("input-senha-resumo");
+    const erro    = document.getElementById("modal-senha-erro");
+    const btnEntrar   = document.getElementById("btn-senha-entrar");
+    const btnCancelar = document.getElementById("btn-senha-cancelar");
+
+    // Limpa estado anterior
+    input.value = "";
+    erro.classList.add("oculto");
+    overlay.classList.remove("oculto");
+    setTimeout(function () { input.focus(); }, 60);
+
+    function fechar(resultado) {
+      overlay.classList.add("oculto");
+      btnEntrar.removeEventListener("click", onEntrar);
+      btnCancelar.removeEventListener("click", onCancelar);
+      input.removeEventListener("keydown", onKeydown);
+      resolver(resultado);
+    }
+
+    function onEntrar() {
+      if (validarSenhaResumoNucleos(input.value)) {
+        fechar(true);
+      } else {
+        erro.classList.remove("oculto");
+        input.value = "";
+        input.focus();
+      }
+    }
+
+    function onCancelar() { fechar(false); }
+
+    function onKeydown(e) {
+      if (e.key === "Enter")  onEntrar();
+      if (e.key === "Escape") onCancelar();
+    }
+
+    btnEntrar.addEventListener("click", onEntrar);
+    btnCancelar.addEventListener("click", onCancelar);
+    input.addEventListener("keydown", onKeydown);
+  });
+}
+
+// Compara a senha digitada com a constante (case-sensitive, incluindo acentos).
+function validarSenhaResumoNucleos(digitada) {
+  return digitada === SENHA_RESUMO_NUCLEOS;
+}
+
 // Configura os botões do cabeçalho: o botão "Resumo dos núcleos" troca para a tela de
 // gestão geral; cada botão de núcleo seleciona o núcleo e troca para a tabela operacional.
 function configurarNavegacaoNucleos() {
-  document.getElementById("btn-resumo-nucleos").addEventListener("click", () => {
-    irParaTela("resumo");
+  document.getElementById("btn-resumo-nucleos").addEventListener("click", async () => {
+    const liberado = await solicitarSenhaResumoNucleos();
+    if (liberado) irParaTela("resumo");
   });
 
   document.querySelectorAll(".btn-nucleo[data-nucleo]").forEach((botao) => {

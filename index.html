@@ -413,6 +413,30 @@
     </div>
   </div>
 
+  <!-- Modal de senha — protege acesso ao Resumo dos núcleos -->
+  <div id="modal-senha-resumo" class="modal-senha-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="modal-senha-titulo">
+    <div class="modal-senha-box">
+      <div class="modal-senha-icone" aria-hidden="true">🔒</div>
+      <h2 class="modal-senha-titulo" id="modal-senha-titulo">Acesso restrito</h2>
+      <p class="modal-senha-descricao">Digite a senha para acessar o Resumo dos núcleos.</p>
+      <div class="modal-senha-campo-wrap">
+        <input
+          type="password"
+          id="input-senha-resumo"
+          class="modal-senha-input"
+          placeholder="Senha"
+          autocomplete="off"
+          aria-label="Senha de acesso"
+        />
+      </div>
+      <p class="modal-senha-erro oculto" id="modal-senha-erro" role="alert">Senha incorreta. Tente novamente.</p>
+      <div class="modal-senha-acoes">
+        <button class="modal-senha-btn-cancelar" id="btn-senha-cancelar">Cancelar</button>
+        <button class="modal-senha-btn-entrar" id="btn-senha-entrar">Entrar</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
