@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KANBAN - SGGE</title>
+  <link rel="icon" type="image/png" href="./assets/favicon.png?v=2">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,7 +14,34 @@
     <div class="topbar-logo">
       <img src="assets/logo-gge.png" alt="Logo GGE" class="logo-gge">
     </div>
-    <h1 class="topbar-title">KANBAN - SGGE</h1>
+    <span class="topbar-separador" aria-hidden="true"></span>
+    <!-- Identidade clicável: volta para a tela inicial (Bem-vindo) sem recarregar a página -->
+    <h1 class="topbar-title">
+      <button type="button" id="btn-ir-inicio" class="topbar-title-btn" title="Voltar para a tela inicial">KANBAN - SGGE</button>
+    </h1>
+    <!-- Acesso à visão Performance: só aparece na tela do Resumo (já autenticada) -->
+    <!-- Relatórios (área gerencial): visível só na tela do Resumo, já autenticada -->
+    <div class="relatorios-menu-wrap" id="relatorios-menu-wrap" hidden>
+      <button type="button" id="btn-relatorios" class="btn-performance btn-relatorios" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-relatorios">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+        <span>Relatórios</span>
+        <svg class="btn-relatorios-seta" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="menu-relatorios" id="menu-relatorios" role="menu" aria-labelledby="btn-relatorios" hidden>
+        <button type="button" class="menu-relatorios-item" role="menuitem" data-relatorio="colecao">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span><strong>Performance por Coleção</strong><small>Análise consolidada da produção editorial por coleção.</small></span>
+        </button>
+        <button type="button" class="menu-relatorios-item" role="menuitem" data-relatorio="individual">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span><strong>Performance Individual</strong><small>Análise de produtividade por diagramador.</small></span>
+        </button>
+      </div>
+    </div>
+    <button type="button" id="btn-performance" class="btn-performance" hidden>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Performance</span>
+    </button>
 
     <!-- Navegação do cabeçalho: "Resumo dos núcleos" troca para a tela de gestão geral;
          os botões de núcleo trocam para a tabela operacional daquele núcleo -->
@@ -28,35 +56,131 @@
     </nav>
   </header>
 
-  <!-- ===================== TELA: RESUMO DOS NÚCLEOS (VISÃO GERENCIAL DE TODOS OS SETORES) ===================== -->
-  <section id="tela-resumo-nucleos" class="tela-resumo-nucleos oculto">
-    <h2 class="tela-resumo-titulo">Resumo dos núcleos</h2>
+  <!-- ===================== TELA: INÍCIO (PORTAL "BEM-VINDO") ===================== -->
+  <section id="tela-inicio" class="tela-inicio oculto">
+    <div class="inicio-conteudo">
+      <!-- Cabeçalho exclusivo da abertura (o .topbar fica oculto via body.modo-inicio) -->
+      <header class="inicio-boas-vindas">
+        <img src="assets/logo.png" alt="Sistema GGE de Ensino" class="inicio-logo">
+        <span class="inicio-logo-separador" aria-hidden="true"></span>
+        <div class="inicio-boas-vindas-textos">
+          <span class="inicio-barra" aria-hidden="true"></span>
+          <h2 class="inicio-titulo">Bem-vindo</h2>
+          <p class="inicio-subtitulo">Selecione uma área para acessar o quadro de demandas.</p>
+        </div>
+      </header>
 
-    <!-- Cards gerais: somam as demandas de TODOS os núcleos/setores -->
-    <div class="resumo-geral-cards">
-      <div class="resumo-card resumo-card-total">
-        <span class="resumo-numero" id="resumo-geral-total">0</span>
-        <span class="resumo-label">Total de demandas</span>
+      <!-- Linha 1: dois cards principais com listas de acesso (itens gerados em renderizarCardsNucleosInicio) -->
+      <div class="inicio-grade">
+        <section class="inicio-card inicio-card-area" aria-labelledby="inicio-titulo-nucleos">
+          <div class="inicio-card-cabecalho">
+            <span class="inicio-card-icone" aria-hidden="true">
+              <img src="assets/diagrama%C3%A7%C3%A3o.png" alt="" class="inicio-card-icone-img">
+            </span>
+            <div>
+              <h3 class="inicio-card-titulo" id="inicio-titulo-nucleos">Diagramação dos Núcleos</h3>
+              <p class="inicio-card-descricao">Produção editorial dos núcleos.</p>
+            </div>
+          </div>
+          <ul class="inicio-lista" id="inicio-lista-nucleos"></ul>
+        </section>
+
+        <section class="inicio-card inicio-card-area" aria-labelledby="inicio-titulo-especializada">
+          <div class="inicio-card-cabecalho">
+            <span class="inicio-card-icone" aria-hidden="true">
+              <img src="assets/illustrator.png" alt="" class="inicio-card-icone-img">
+            </span>
+            <div>
+              <h3 class="inicio-card-titulo" id="inicio-titulo-especializada">Produção Especializada</h3>
+              <p class="inicio-card-descricao">Serviço técnico.</p>
+            </div>
+          </div>
+          <ul class="inicio-lista" id="inicio-lista-especializada"></ul>
+        </section>
       </div>
-      <div class="resumo-card resumo-processo">
-        <span class="resumo-numero" id="resumo-geral-processo">0</span>
-        <span class="resumo-label">Em processo</span>
-      </div>
-      <div class="resumo-card resumo-atrasado resumo-card-destaque">
-        <span class="resumo-numero" id="resumo-geral-atrasadas">0</span>
-        <span class="resumo-label">Atrasadas</span>
-      </div>
-      <div class="resumo-card resumo-finalizado">
-        <span class="resumo-numero" id="resumo-geral-finalizadas">0</span>
-        <span class="resumo-label">Finalizadas</span>
+
+      <!-- Linha 2: cards horizontais de altura reduzida -->
+      <div class="inicio-grade">
+        <button type="button" class="inicio-card inicio-card-atalho" id="btn-inicio-equipe">
+          <span class="inicio-card-icone" aria-hidden="true">
+              <img src="assets/equipe.png" alt="" class="inicio-card-icone-img">
+            </span>
+          <span class="inicio-atalho-textos">
+            <span class="inicio-card-titulo">Equipe de Diagramação</span>
+            <span class="inicio-card-descricao">Conheça os profissionais.</span>
+          </span>
+          <span class="inicio-atalho-seta" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+        </button>
+
+        <button type="button" class="inicio-card inicio-card-atalho" id="btn-inicio-resumo">
+          <span class="inicio-card-icone" aria-hidden="true">
+              <img src="assets/resumo.png" alt="" class="inicio-card-icone-img">
+            </span>
+          <span class="inicio-atalho-textos">
+            <span class="inicio-card-titulo">Resumo dos Núcleos</span>
+            <span class="inicio-card-descricao">
+              <svg class="inicio-cadeado" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Acesso restrito à gestão.
+            </span>
+          </span>
+          <span class="inicio-atalho-seta" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+        </button>
       </div>
     </div>
+  </section>
 
-    <!-- Alternância entre as visões internas do "Resumo dos núcleos" -->
-    <div class="resumo-acoes-secundarias">
-      <button id="btn-visao-equipe" class="btn-toggle-resumo ativo">Visão da equipe</button>
-      <button id="btn-kanban-visual-geral" class="btn-toggle-resumo">Kanban Visual Geral</button>
-      <button id="btn-equipe-diagramacao" class="btn-toggle-resumo">Equipe de Diagramação</button>
+  <!-- ===================== TELA: RESUMO DOS NÚCLEOS (VISÃO GERENCIAL DE TODOS OS SETORES) ===================== -->
+  <section id="tela-resumo-nucleos" class="tela-resumo-nucleos oculto">
+    <!-- Cabeçalho operacional do Resumo (oculto nas visões Performance e Equipe de Diagramação) -->
+    <div id="resumo-cabecalho-operacional">
+      <h2 class="tela-resumo-titulo">Resumo dos núcleos</h2>
+
+      <!-- Contagem de diagramadores DISTINTOS, a partir dos mesmos grupos das listas abaixo -->
+      <div class="resumo-equipe-cards">
+        <div class="resumo-equipe-card resumo-equipe-card-total">
+          <div class="resumo-equipe-card-textos">
+            <span class="resumo-equipe-numero" id="resumo-diag-total">–</span>
+            <span class="resumo-equipe-label">Total de Diagramadores</span>
+          </div>
+          <span class="resumo-equipe-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3.2"/><path d="M6.5 20v-1.5a5.5 5.5 0 0 1 11 0V20"/><circle cx="4.5" cy="10" r="2.2"/><path d="M1 20v-1a3.5 3.5 0 0 1 4-3.46"/><circle cx="19.5" cy="10" r="2.2"/><path d="M23 20v-1a3.5 3.5 0 0 0-4-3.46"/></svg>
+          </span>
+        </div>
+        <div class="resumo-equipe-card resumo-equipe-card-ativos">
+          <div class="resumo-equipe-card-textos">
+            <span class="resumo-equipe-numero" id="resumo-diag-ativos">–</span>
+            <span class="resumo-equipe-label">Diagramadores com atividade</span>
+          </div>
+          <span class="resumo-equipe-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+        </div>
+        <div class="resumo-equipe-card resumo-equipe-card-livres">
+          <div class="resumo-equipe-card-textos">
+            <span class="resumo-equipe-numero" id="resumo-diag-livres">–</span>
+            <span class="resumo-equipe-label">Diagramadores livres</span>
+          </div>
+          <span class="resumo-equipe-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+          </span>
+        </div>
+        <div class="resumo-equipe-card resumo-equipe-card-ferias">
+          <div class="resumo-equipe-card-textos">
+            <span class="resumo-equipe-numero" id="resumo-diag-ferias">–</span>
+            <span class="resumo-equipe-label">Diagramadores de férias</span>
+          </div>
+          <span class="resumo-equipe-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
+        </div>
+      </div>
+      <p class="resumo-equipe-aviso oculto" id="resumo-listas-aviso" role="status">Não foi possível ler a lista oficial de diagramadores (aba LISTAS). Os indicadores da equipe estão indisponíveis.</p>
+      <p class="resumo-equipe-aviso oculto" id="resumo-ferias-aviso" role="status">Não foi possível consultar as férias. A contagem de diagramadores de férias está indisponível e a lista de livres pode incluir quem está de férias.</p>
+      <p class="resumo-equipe-aviso oculto" id="resumo-equipe-aviso" role="status">Não foi possível carregar as demandas da planilha. Os indicadores da equipe estão indisponíveis.</p>
     </div>
 
     <!-- ===================== VISÃO: EQUIPE (demandas críticas + diagramadores) ===================== -->
@@ -84,6 +208,13 @@
             <!-- Etiquetas geradas dinamicamente em script.js -->
           </div>
         </div>
+        <div class="resumo-equipe-coluna resumo-equipe-coluna-ferias">
+          <h3 class="resumo-equipe-subtitulo">Diagramadores de férias</h3>
+          <p class="resumo-equipe-descricao">Profissionais temporariamente indisponíveis por período de férias.</p>
+          <div class="resumo-equipe-etiquetas" id="lista-diagramadores-ferias">
+            <!-- Itens gerados dinamicamente em script.js -->
+          </div>
+        </div>
       </div>
     </div>
 
@@ -95,9 +226,14 @@
 
         <!-- Nav bar como overlay dentro do hero — não cria faixa separada -->
         <div class="team-nav-bar">
-          <button id="btn-voltar-resumo-equipe" class="team-back-btn">
-            &#8592; Resumo dos núcleos
+          <!-- Botão Voltar animado (equivalente ao BackButton de referência, em HTML/CSS nativos) -->
+          <button type="button" id="btn-voltar-resumo-equipe" class="botao-voltar-animado" aria-label="Voltar ao início">
+            <span class="botao-voltar-animado-icone" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            </span>
+            <span class="botao-voltar-animado-texto">Voltar</span>
           </button>
+          <img src="assets/logo.png" alt="Sistema GGE de Ensino" class="team-logo" width="300" height="98">
         </div>
 
         <!-- Decorações de fundo do hero -->
@@ -105,18 +241,15 @@
         <div class="team-hero-orb team-hero-orb-2" aria-hidden="true"></div>
         <div class="team-hero-orb team-hero-orb-3" aria-hidden="true"></div>
 
-        <!-- Conteúdo do hero -->
+        <!-- Conteúdo do hero (compacto) -->
         <div class="team-hero-body">
           <div class="team-hero-content">
-            <p class="team-hero-eyebrow">GGE · Sistema de Ensino</p>
-            <h2 class="team-hero-titulo">Equipe de<br>Diagramação</h2>
-            <p class="team-hero-subtitulo">Conheça os profissionais que movimentam o fluxo de produção dos materiais.</p>
-            <p class="team-hero-descricao">Mais do que demandas e prazos, este painel representa pessoas, talento e colaboração diária na construção do ensino.</p>
-          </div>
-          <div class="team-hero-art" aria-hidden="true">
-            <div class="team-hero-art-ring team-hero-art-ring-1"></div>
-            <div class="team-hero-art-ring team-hero-art-ring-2"></div>
-            <div class="team-hero-art-ring team-hero-art-ring-3"></div>
+            <!-- Título + ícone "diagramação" (assets/diagramação.png) na mesma linha -->
+            <div class="team-hero-titulo-linha">
+              <h2 class="team-hero-titulo">Equipe de Diagramação</h2>
+              <img src="assets/diagrama%C3%A7%C3%A3o.png" alt="" class="team-hero-titulo-icone" width="512" height="512" aria-hidden="true">
+            </div>
+            <p class="team-hero-subtitulo">Conheça os profissionais responsáveis pela produção editorial.</p>
           </div>
         </div>
 
@@ -125,16 +258,19 @@
       <!-- Bloco 2: Carrossel da equipe -->
       <div class="team-carousel-section">
         <div class="team-carousel-header">
-          <span class="team-carousel-label">Profissionais da equipe</span>
-          <span class="team-carousel-count" id="team-carousel-count"></span>
+          <h3 class="team-carousel-label">Profissionais da equipe</h3>
+          <span class="team-carousel-count" id="team-carousel-count" role="status"></span>
         </div>
+        <!-- Filtros por núcleo (gerados a partir da aba LISTAS) -->
+        <div class="team-filtros" id="team-filtros" role="group" aria-label="Filtrar profissionais por núcleo"></div>
         <div class="equipe-carousel-wrapper">
-          <button class="equipe-carousel-btn equipe-carousel-prev" aria-label="Anterior">&#8249;</button>
-          <div class="equipe-carousel" id="equipeCarousel">
+          <button type="button" class="equipe-carousel-btn equipe-carousel-prev" aria-label="Profissionais anteriores" aria-controls="equipeCarousel">&#8249;</button>
+          <div class="equipe-carousel" id="equipeCarousel" tabindex="0" role="region" aria-label="Profissionais da equipe — use as setas do teclado para navegar">
             <!-- Cards gerados dinamicamente por renderizarCarrosselEquipe() -->
           </div>
-          <button class="equipe-carousel-btn equipe-carousel-next" aria-label="Próximo">&#8250;</button>
+          <button type="button" class="equipe-carousel-btn equipe-carousel-next" aria-label="Próximos profissionais" aria-controls="equipeCarousel">&#8250;</button>
         </div>
+        <div class="equipe-carousel-indicador" id="equipe-carousel-indicador" aria-live="polite"></div>
       </div>
 
       <!-- Bloco 3: Faixa institucional final -->
@@ -164,6 +300,137 @@
         <!-- Blocos por núcleo gerados dinamicamente em script.js -->
       </div>
     </div>
+
+    <!-- ===================== VISÃO: PERFORMANCE (indicadores consolidados, área gerencial) ===================== -->
+    <div id="resumo-visao-performance" class="oculto">
+      <div class="performance-cabecalho">
+        <div>
+          <h2 class="performance-titulo">Performance dos Núcleos</h2>
+          <p class="performance-subtitulo">Indicadores consolidados da produção de diagramação.</p>
+        </div>
+        <button type="button" id="btn-voltar-resumo" class="btn-voltar-resumo">&#8592; Voltar ao Resumo</button>
+      </div>
+
+      <!-- Indicador discreto de cálculo/erro (controlado por agendarRenderizacaoPerformance) -->
+      <p class="perf-status" id="perf-status" role="status" hidden></p>
+
+      <!-- Cards gerais (transferidos do Resumo, mesmos IDs): somam as demandas de TODOS os núcleos/setores -->
+      <div class="resumo-geral-cards">
+        <div class="resumo-card resumo-card-total">
+          <span class="resumo-numero" id="resumo-geral-total">0</span>
+          <span class="resumo-label">Total de demandas</span>
+        </div>
+        <div class="resumo-card resumo-processo">
+          <span class="resumo-numero" id="resumo-geral-processo">0</span>
+          <span class="resumo-label">Em processo</span>
+        </div>
+        <div class="resumo-card resumo-atrasado resumo-card-destaque">
+          <span class="resumo-numero" id="resumo-geral-atrasadas">0</span>
+          <span class="resumo-label">Atrasadas</span>
+        </div>
+        <!-- Substitui "Finalizadas" (o total de concluídas aparece na Tabela de Performance) -->
+        <div class="resumo-card resumo-card-tempo">
+          <span class="resumo-numero" id="resumo-geral-tempo-medio" title="">–</span>
+          <span class="resumo-label">Tempo médio de atividade</span>
+        </div>
+      </div>
+
+      <!-- ===================== GRÁFICOS ===================== -->
+      <div class="perf-graficos">
+        <section class="perf-card" aria-labelledby="perf-titulo-nucleos">
+          <h3 class="perf-card-titulo" id="perf-titulo-nucleos">Total de atividades por núcleo</h3>
+          <div class="perf-barras" id="perf-grafico-nucleos"></div>
+        </section>
+
+        <section class="perf-card" aria-labelledby="perf-titulo-prazo">
+          <h3 class="perf-card-titulo" id="perf-titulo-prazo">No prazo x Com atraso</h3>
+          <p class="perf-card-nota">Atividades concluídas com prazo previsto informado.</p>
+          <div class="perf-pizza" id="perf-grafico-prazo"></div>
+        </section>
+      </div>
+
+      <!-- ===================== PERFORMANCE POR DIAGRAMADOR ===================== -->
+      <h3 class="perf-secao-titulo">Performance por diagramador</h3>
+
+      <section class="perf-card" aria-labelledby="perf-titulo-ranking">
+        <h4 class="perf-card-titulo" id="perf-titulo-ranking">Ranking operacional</h4>
+        <p class="perf-card-nota">Total de atividades concluídas por diagramador.</p>
+        <div class="perf-barras perf-ranking" id="perf-ranking"></div>
+      </section>
+
+      <section class="perf-card" aria-labelledby="perf-titulo-tabela">
+        <h4 class="perf-card-titulo" id="perf-titulo-tabela">Tabela de Performance</h4>
+        <div class="perf-tabela-scroll">
+          <table class="perf-tabela" id="perf-tabela">
+            <thead>
+              <tr>
+                <th scope="col" data-coluna="nome" class="perf-col-texto">Diagramador</th>
+                <th scope="col" data-coluna="total">Total de Atividades</th>
+                <th scope="col" data-coluna="concluidas">Concluídas</th>
+                <th scope="col" data-coluna="emAndamento">Em andamento</th>
+                <th scope="col" data-coluna="pendentes">Pendentes</th>
+                <th scope="col" data-coluna="noPrazo">Total no prazo</th>
+                <th scope="col" data-coluna="atrasadas">Total atrasada</th>
+                <th scope="col" data-coluna="pctNoPrazo">% no prazo</th>
+                <th scope="col" data-coluna="pctAtrasado">% atrasado</th>
+                <th scope="col" data-coluna="pctParticipacao">% participação</th>
+              </tr>
+            </thead>
+            <tbody id="perf-tabela-corpo"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================== MAPA DE CALOR: CONCLUSÕES POR DIA ===================== -->
+      <section class="perf-card perf-card-mapa" aria-labelledby="perf-titulo-mapa">
+        <div class="perf-mapa-cabecalho">
+          <div>
+            <h3 class="perf-card-titulo" id="perf-titulo-mapa">Mapa de calor — atividades por dia e diagramador</h3>
+            <p class="perf-card-nota">Acompanhamento diário de atividades em execução, entregas concluídas e dias sem registros.</p>
+          </div>
+          <!-- Filtros do mapa: Núcleo (opções geradas em popularSeletorNucleoMapa) + Mês -->
+          <div class="perf-mapa-filtros">
+            <label class="perf-mapa-filtro">
+              <span class="perf-mapa-filtro-rotulo">Núcleo</span>
+              <select id="perf-mapa-nucleo" aria-label="Núcleo exibido no mapa de calor">
+                <option value="">Todos os núcleos</option>
+              </select>
+            </label>
+            <!-- Filtro mensal: mostra todos os dias do mês escolhido; ano = ano atual -->
+            <label class="perf-mapa-filtro">
+              <span class="perf-mapa-filtro-rotulo">Mês</span>
+              <select id="perf-mapa-mes" aria-label="Mês exibido no mapa de calor">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <ul class="perf-mapa-legenda" aria-label="Legenda do mapa de calor">
+          <li><span class="perf-mapa-legenda-amostra perf-mapa-concluidas" aria-hidden="true"></span>Atividades concluídas (nº de entregas)</li>
+          <li><span class="perf-mapa-legenda-amostra perf-mapa-execucao" aria-hidden="true"></span>Em atividade</li>
+          <li><span class="perf-mapa-legenda-amostra perf-mapa-sem-registro" aria-hidden="true"></span>Sem registros de atividade</li>
+          <li><span class="perf-mapa-legenda-amostra perf-mapa-futuro" aria-hidden="true"></span>Fim de semana, feriado ou dia futuro sem registros</li>
+          <li><span class="perf-mapa-selo-fer" aria-hidden="true">FER</span>Feriado oficial</li>
+          <li><span class="perf-mapa-legenda-amostra perf-mapa-ferias" aria-hidden="true"></span>Férias</li>
+          <li><span class="perf-mapa-legenda-hoje" aria-hidden="true"></span>Barra vermelha — Dia atual</li>
+          <li class="perf-mapa-legenda-nota">Sem registros não significa ausência de trabalho: indica apenas que não há Início/Fim registrados para o dia.</li>
+        </ul>
+        <p class="perf-mapa-ferias-aviso" id="perf-mapa-ferias-aviso" role="status" hidden>Dados de férias indisponíveis no momento: as férias não estão marcadas no mapa.</p>
+        <div class="perf-mapa-scroll" id="perf-mapa-calor"></div>
+      </section>
+      <div class="perf-mapa-dica" id="perf-mapa-dica" role="tooltip" hidden></div>
+    </div>
   </section>
 
   <!-- ===================== TELA: TABELA OPERACIONAL DO NÚCLEO SELECIONADO ===================== -->
@@ -172,30 +439,35 @@
     <!-- ===================== CARDS GERAIS ===================== -->
     <section class="resumo">
       <div class="resumo-card">
-        <span class="resumo-numero" id="resumo-total">0</span>
-        <span class="resumo-label">Total de demandas</span>
-      </div>
-      <div class="resumo-card">
-        <span class="resumo-numero" id="resumo-processo">0</span>
-        <span class="resumo-label">Em processo</span>
+        <div class="resumo-card-textos">
+          <span class="resumo-numero" id="resumo-processo">0</span>
+          <span class="resumo-label">Em processo</span>
+        </div>
+        <img src="assets/Em%20processo.png" alt="" class="resumo-card-icone">
       </div>
       <div class="resumo-card resumo-atrasado">
-        <span class="resumo-numero" id="resumo-atrasadas">0</span>
-        <span class="resumo-label">Atrasadas</span>
+        <div class="resumo-card-textos">
+          <span class="resumo-numero" id="resumo-atrasadas">0</span>
+          <span class="resumo-label">Atrasadas</span>
+        </div>
+        <img src="assets/Atrasadas.png" alt="" class="resumo-card-icone resumo-card-icone-atrasadas">
       </div>
       <div class="resumo-card resumo-finalizado">
-        <span class="resumo-numero" id="resumo-finalizadas">0</span>
-        <span class="resumo-label">Finalizadas</span>
+        <div class="resumo-card-textos">
+          <span class="resumo-numero" id="resumo-finalizadas">0</span>
+          <span class="resumo-label">Finalizadas</span>
+        </div>
+        <img src="assets/finalizado.png" alt="" class="resumo-card-icone">
       </div>
     </section>
 
     <!-- ===================== BARRA OPERACIONAL: KANBAN VISUAL + PLANILHAS AUXILIARES + FILTROS ===================== -->
     <section class="acoes">
       <div class="acoes-botoes">
-        <button id="btn-kanban-visual" class="btn-primario">Kanban Visual</button>
-        <button id="btn-solicitacao-imagens" class="btn-primario btn-acao-compacto">Solicitação de imagens</button>
-        <button id="btn-solicitacao-qrs" class="btn-primario btn-acao-compacto">Solicitação de QRs</button>
-        <button id="btn-solicitacao-ilustracao" class="btn-primario btn-acao-compacto">Solicitação de ilustração</button>
+        <button id="btn-kanban-visual" class="btn-primario"><svg class="btn-icone" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg><span>Kanban Visual</span></button>
+        <button id="btn-solicitacao-imagens" class="btn-primario btn-acao-compacto"><svg class="btn-icone" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Solicitação de imagens</span></button>
+        <button id="btn-solicitacao-qrs" class="btn-primario btn-acao-compacto"><svg class="btn-icone" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/><path d="M21 14v.01"/><path d="M21 21h-4"/><path d="M14 21v-1"/><path d="M21 17v1"/></svg><span>Solicitação de QRs</span></button>
+        <button id="btn-solicitacao-ilustracao" class="btn-primario btn-acao-compacto"><svg class="btn-icone" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg><span>Solicitação de ilustração</span></button>
       </div>
 
       <div class="filtros">
@@ -212,7 +484,18 @@
           <option value="Finalizado">Finalizado</option>
         </select>
 
-        <input type="text" id="filtro-busca" placeholder="Buscar por atividade...">
+        <!-- Mínimo de linhas exibidas por diagramador (preferência salva no navegador) -->
+        <label class="seletor-linhas" for="seletor-linhas-diagramador" title="Linhas por diagramador">
+          <svg class="seletor-linhas-icone" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <span class="seletor-linhas-rotulo">Linhas por diagramador</span>
+          <select id="seletor-linhas-diagramador">
+            <option value="6">6 linhas</option>
+            <option value="7">7 linhas</option>
+            <option value="8">8 linhas</option>
+            <option value="9">9 linhas</option>
+            <option value="10">10 linhas</option>
+          </select>
+        </label>
       </div>
     </section>
 
@@ -246,12 +529,14 @@
 
   <!-- ===================== TELA: KANBAN VISUAL (QUADRO POR STATUS DO NÚCLEO SELECIONADO) ===================== -->
   <section id="tela-kanban-visual" class="tela-kanban-visual oculto">
+    <!-- Grade 1fr | auto | 1fr: botão à esquerda, título centralizado na largura total, filtros à direita -->
     <div class="kanban-visual-cabecalho">
-      <div>
-        <h2 class="kanban-visual-titulo">QUADRO KANBAN - SGGE</h2>
-        <p class="kanban-visual-subtitulo" id="kanban-visual-subtitulo">Núcleo 1</p>
+      <div class="kanban-cabecalho-esquerda">
+        <button id="btn-voltar-tabela" class="btn-primario">Voltar para tabela</button>
       </div>
-      <button id="btn-voltar-tabela" class="btn-primario">Voltar para tabela</button>
+      <h2 class="kanban-visual-titulo">QUADRO KANBAN - SGGE - <span class="kanban-visual-subtitulo" id="kanban-visual-subtitulo">Núcleo 1</span></h2>
+      <!-- Filtro visual por diagramador do núcleo (botões gerados em renderizarFiltroDiagramadoresKanbanVisual) -->
+      <div class="kanban-filtro-diagramadores" id="kanban-filtro-diagramadores" role="group" aria-label="Filtrar demandas por diagramador"></div>
     </div>
 
     <div class="kanban-visual-grade">
@@ -281,6 +566,156 @@
       </div>
     </div>
   </section>
+
+  <!-- ===================== MODAL: CONFIGURAÇÃO DE RELATÓRIOS DE PERFORMANCE ===================== -->
+  <div id="modal-relatorio" class="modal-overlay modal-relatorio-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="modal-relatorio-titulo">
+    <div class="modal modal-relatorio">
+      <div class="modal-header">
+        <h2 id="modal-relatorio-titulo">Relatório</h2>
+        <button type="button" class="btn-fechar" id="btn-fechar-relatorio" aria-label="Fechar">&times;</button>
+      </div>
+
+      <!-- Performance por Coleção -->
+      <form id="form-relatorio-colecao" class="modal-form form-relatorio" novalidate hidden>
+        <label class="campo-largo">
+          Coleção / unidade
+          <select id="rel-colecao" required></select>
+        </label>
+        <label>
+          Período inicial
+          <input type="date" id="rel-colecao-inicio" required>
+        </label>
+        <label>
+          Período final
+          <input type="date" id="rel-colecao-fim" required>
+        </label>
+      </form>
+
+      <!-- Performance Individual -->
+      <form id="form-relatorio-individual" class="modal-form form-relatorio" novalidate hidden>
+        <label>
+          Núcleo
+          <select id="rel-ind-nucleo" required></select>
+        </label>
+        <label>
+          Diagramador
+          <select id="rel-ind-diagramador" required></select>
+        </label>
+        <label>
+          Período inicial
+          <input type="date" id="rel-ind-inicio" required>
+        </label>
+        <label>
+          Período final
+          <input type="date" id="rel-ind-fim" required>
+        </label>
+      </form>
+
+      <p class="relatorio-regras">Total de atividades = atividades com <strong>Início</strong> no período (sem Início: data de criação). Entregas, no prazo e com atraso = atividades finalizadas com <strong>Fim</strong> no período.</p>
+      <p class="relatorio-erro" id="relatorio-erro" role="alert" hidden></p>
+
+      <div class="modal-acoes">
+        <button type="button" class="btn-secundario" id="btn-cancelar-relatorio">Cancelar</button>
+        <button type="button" class="btn-primario" id="btn-gerar-relatorio">Gerar relatório PDF</button>
+      </div>
+      <p class="relatorio-dica" id="relatorio-dica-impressao">Na janela de impressão, escolha <strong>Salvar como PDF</strong> como destino.</p>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: SELECIONAR ATIVIDADES (coluna ATIVIDADE) ===================== -->
+  <div id="modal-atividades" class="modal-overlay modal-relatorio-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="modal-atividades-titulo" aria-describedby="modal-atividades-subtitulo">
+    <div class="modal modal-atividades">
+      <div class="modal-header modal-atividades-cabecalho">
+        <div>
+          <h2 id="modal-atividades-titulo">Selecionar atividades</h2>
+          <p id="modal-atividades-subtitulo">Selecione uma ou mais atividades para esta demanda.</p>
+        </div>
+        <button type="button" class="btn-fechar" id="btn-fechar-atividades" aria-label="Fechar sem salvar">&times;</button>
+      </div>
+      <div class="modal-atividades-busca-wrap">
+        <input type="search" id="modal-atividades-busca" class="modal-atividades-busca" placeholder="Buscar atividade..." aria-label="Buscar atividade" autocomplete="off">
+      </div>
+      <div class="modal-atividades-lista" id="modal-atividades-lista" role="group" aria-label="Atividades disponíveis"></div>
+      <div class="modal-atividades-rodape">
+        <span id="modal-atividades-contador" role="status">0 atividades selecionadas</span>
+        <button type="button" class="btn-secundario" id="btn-limpar-atividades">Limpar seleção</button>
+        <button type="button" class="btn-secundario" id="btn-cancelar-atividades">Cancelar</button>
+        <button type="button" class="btn-primario" id="btn-concluir-atividades">Concluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: DETALHE DE UMA CÉLULA DO MAPA DE CALOR ===================== -->
+  <div id="modal-mapa-detalhe" class="modal-overlay modal-relatorio-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="modal-mapa-detalhe-titulo">
+    <div class="modal modal-mapa-detalhe">
+      <div class="modal-header mapa-detalhe-cabecalho">
+        <h2 id="modal-mapa-detalhe-titulo">Atividades concluídas</h2>
+        <button type="button" class="btn-fechar" id="btn-fechar-mapa-detalhe" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="mapa-detalhe-conteudo" id="modal-mapa-detalhe-conteudo">
+        <div class="mapa-detalhe-resumo" id="mapa-detalhe-resumo"></div>
+        <p class="mapa-detalhe-aviso" id="mapa-detalhe-aviso" role="status" hidden></p>
+        <div class="mapa-detalhe-lista" id="mapa-detalhe-lista"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: CONFIRMAÇÃO DA DATA FIM (CONCLUSÃO) ===================== -->
+  <div id="modal-conclusao" class="modal-overlay modal-relatorio-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="modal-conclusao-titulo" aria-describedby="modal-conclusao-subtitulo">
+    <div class="modal modal-conclusao">
+      <div class="modal-header">
+        <h2 id="modal-conclusao-titulo">Confirmar conclusão da atividade</h2>
+        <button type="button" class="btn-fechar" id="btn-fechar-conclusao" aria-label="Fechar sem registrar">&times;</button>
+      </div>
+      <p class="conclusao-subtitulo" id="modal-conclusao-subtitulo">Confira as informações antes de registrar a conclusão na base de dados.</p>
+      <dl class="conclusao-detalhes" id="conclusao-detalhes"></dl>
+      <div class="conclusao-destaque" id="conclusao-destaque"></div>
+      <ul class="conclusao-pendencias" id="conclusao-pendencias" hidden></ul>
+      <p class="relatorio-erro" id="conclusao-erro" role="alert" hidden></p>
+      <div class="modal-acoes">
+        <button type="button" class="btn-secundario" id="btn-voltar-conclusao">Voltar e corrigir</button>
+        <button type="button" class="btn-primario" id="btn-confirmar-conclusao">Confirmar conclusão</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: PROGRAMAÇÃO DE FÉRIAS (somente interface) ===================== -->
+  <div id="modal-ferias" class="modal-overlay modal-relatorio-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="modal-ferias-titulo">
+    <div class="modal modal-ferias">
+      <div class="modal-header">
+        <h2 id="modal-ferias-titulo">Programação de férias</h2>
+        <button type="button" class="btn-fechar" id="btn-fechar-ferias" aria-label="Fechar">&times;</button>
+      </div>
+      <form class="modal-form" id="form-ferias" novalidate>
+        <label class="campo-largo">
+          Diagramador
+          <input type="text" id="ferias-diagramador" readonly>
+        </label>
+        <label>
+          Data de início
+          <input type="date" id="ferias-inicio" required>
+        </label>
+        <label>
+          Data de término
+          <input type="date" id="ferias-fim" required>
+        </label>
+        <label class="campo-largo">
+          Observações (opcional)
+          <textarea id="ferias-observacoes" rows="3"></textarea>
+        </label>
+      </form>
+      <ul class="ferias-lista" id="ferias-lista" aria-label="Períodos de férias cadastrados" hidden></ul>
+      <p class="relatorio-erro" id="ferias-erro" role="alert" hidden></p>
+      <p class="ferias-aviso" id="ferias-aviso-persistencia">
+        O cadastro de férias ainda não está ativo: a integração com a aba FERIAS_DIAGRAMADORES
+        aguarda implantação validada. Por isso o botão "Salvar férias" está desabilitado e nada é registrado.
+      </p>
+      <div class="modal-acoes">
+        <button type="button" class="btn-secundario" id="btn-cancelar-ferias">Cancelar</button>
+        <button type="button" class="btn-primario" id="btn-salvar-ferias" disabled>Salvar férias</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ===================== MODAL NOVA DEMANDA ===================== -->
   <div id="modal-overlay" class="modal-overlay oculto">
@@ -428,6 +863,11 @@
           autocomplete="off"
           aria-label="Senha de acesso"
         />
+        <!-- Mostrar/ocultar senha: type="button" para nunca enviar nada -->
+        <button type="button" class="modal-senha-olho" id="btn-mostrar-senha" aria-label="Mostrar senha" aria-controls="input-senha-resumo" aria-pressed="false">
+          <svg class="icone-olho-aberto" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="icone-olho-fechado" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-7 0-11-7-11-7a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
       </div>
       <p class="modal-senha-erro oculto" id="modal-senha-erro" role="alert">Senha incorreta. Tente novamente.</p>
       <div class="modal-senha-acoes">

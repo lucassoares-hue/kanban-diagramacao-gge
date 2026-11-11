@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --azul-escuro: #0b2e4f;
+      --azul-medio: #1e6091;
+      --azul-claro: #e8f0f7;
+      --cinza-fundo: #f2f5f8;
+      --cinza-borda: #dde3ea;
+      --cinza-texto: #4a5260;
+      --branco: #ffffff;
+      --verde: #1e6b3f;
+      --verde-fundo: #e6f4ec;
+      --ambar: #7a5a12;
+      --ambar-fundo: #fff6e5;
+      --vermelho: #a12b2b;
+      --vermelho-fundo: #fdecea;
+      --radius: 10px;
+      --sombra: 0 2px 6px rgba(11, 46, 79, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--cinza-fundo);
+      color: var(--cinza-texto);
+      font-size: 14px;
+    }
+    .topo {
+      background: linear-gradient(135deg, #0b2e4f 0%, #103a60 100%);
+      color: var(--branco);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .topo .marca { font-weight: 700; letter-spacing: 0.02em; }
+    .topo .usuario { font-size: 12px; opacity: 0.85; }
+    main { max-width: 920px; margin: 0 auto; padding: 22px 16px 40px; }
+    h1 { margin: 0 0 4px; font-size: 22px; color: var(--azul-escuro); }
+    .subtitulo { margin: 0 0 18px; font-size: 13px; }
+    .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+    .card {
+      background: var(--branco);
+      border: 1px solid var(--cinza-borda);
+      border-radius: var(--radius);
+      box-shadow: var(--sombra);
+      padding: 18px 20px;
+    }
+    .card h2 { margin: 0 0 14px; font-size: 15px; color: var(--azul-escuro); }
+    label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+    .linha-datas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    select, input, textarea {
+      font: inherit;
+      color: var(--azul-escuro);
+      padding: 8px 10px;
+      border: 1.5px solid var(--cinza-borda);
+      border-radius: 6px;
+      background: var(--branco);
+      width: 100%;
+    }
+    textarea { resize: vertical; min-height: 70px; }
+    select:focus, input:focus, textarea:focus { outline: none; border-color: var(--azul-medio); box-shadow: 0 0 0 3px rgba(30, 96, 145, 0.14); }
+    select:disabled, input:disabled, textarea:disabled { background: #f6f7f9; color: #8a94a3; }
+    .acoes { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+    button {
+      font: inherit;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      border: 1.5px solid var(--azul-medio);
+    }
+    .primario { background: var(--azul-medio); color: var(--branco); }
+    .primario:hover:not(:disabled) { background: #174f78; }
+    .secundario { background: var(--branco); color: var(--azul-medio); }
+    .secundario:hover:not(:disabled) { background: var(--azul-claro); }
+    .perigo { background: var(--branco); color: var(--vermelho); border-color: #e7b7b7; }
+    .perigo:hover:not(:disabled) { background: var(--vermelho-fundo); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button:focus-visible { outline: 2px solid var(--azul-escuro); outline-offset: 2px; }
+    .mensagem { margin: 0 0 14px; padding: 10px 12px; border-radius: 6px; font-size: 13px; line-height: 1.4; }
+    .mensagem[hidden] { display: none; }
+    .mensagem.sucesso { background: var(--verde-fundo); color: var(--verde); }
+    .mensagem.erro { background: var(--vermelho-fundo); color: var(--vermelho); }
+    .mensagem.info { background: var(--azul-claro); color: var(--azul-escuro); }
+    .historico { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .periodo { border: 1px solid var(--cinza-borda); border-radius: 8px; padding: 10px 12px; }
+    .periodo-topo { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .periodo-datas { font-weight: 700; color: var(--azul-escuro); }
+    .selo { padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+    .selo.programadas { background: var(--ambar-fundo); color: var(--ambar); }
+    .selo.em-ferias { background: var(--verde-fundo); color: var(--verde); }
+    .selo.encerradas { background: #eef0f3; color: #5d6675; }
+    .periodo-obs, .periodo-auditoria { margin: 6px 0 0; font-size: 12px; overflow-wrap: anywhere; }
+    .periodo-auditoria { color: #8a94a3; }
+    .periodo-acoes { display: flex; gap: 6px; margin-top: 8px; }
+    .periodo-acoes button { padding: 4px 10px; font-size: 12px; }
+    .vazio { font-size: 13px; color: #8a94a3; }
+    .carregando { text-align: center; padding: 40px 0; color: #8a94a3; }
+    @media (max-width: 720px) {
+      .grade { grid-template-columns: 1fr; }
+      .linha-datas { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <span class="marca">KANBAN - SGGE · Controle de Férias</span>
+    <span class="usuario" id="usuario"></span>
+  </header>
+
+  <main>
+    <h1>Programação de férias</h1>
+    <p class="subtitulo">Cadastro e acompanhamento dos períodos de férias dos diagramadores.</p>
+
+    <p class="mensagem" id="mensagem" role="status" aria-live="polite" hidden></p>
+    <p class="carregando" id="carregando">Carregando…</p>
+
+    <div class="grade" id="conteudo" hidden>
+      <section class="card" aria-labelledby="titulo-form">
+        <h2 id="titulo-form">Novo período</h2>
+        <form id="form" novalidate>
+          <label>Diagramador
+            <select id="diagramador" required></select>
+          </label>
+          <div class="linha-datas">
+            <label>Data de início
+              <input type="date" id="inicio" required>
+            </label>
+            <label>Data de término
+              <input type="date" id="fim" required>
+            </label>
+          </div>
+          <label>Observações (opcional)
+            <textarea id="observacoes" maxlength="500"></textarea>
+          </label>
+          <div class="acoes">
+            <button type="button" class="secundario" id="cancelar-edicao" hidden>Cancelar edição</button>
+            <button type="submit" class="primario" id="salvar">Salvar férias</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card" aria-labelledby="titulo-historico">
+        <h2 id="titulo-historico">Períodos registrados</h2>
+        <ul class="historico" id="historico"></ul>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Toda a interface é montada com DOM + textContent (nunca innerHTML com dados).
+    // A autorização é decidida no servidor; "podeEditar" aqui só ajusta a tela.
+    var estado = { contexto: null, editandoId: null, ocupado: false, sugerido: '' };
+    var el = function (id) { return document.getElementById(id); };
+
+    function mostrarMensagem(texto, tipo) {
+      var m = el('mensagem');
+      m.textContent = texto || '';
+      m.className = 'mensagem ' + (tipo || 'info');
+      m.hidden = !texto;
+    }
+
+    function formatarData(iso) {
+      var p = String(iso || '').split('-');
+      return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : '–';
+    }
+
+    function classeSituacao(s) {
+      return s === 'Em férias' ? 'em-ferias' : s === 'Programadas' ? 'programadas' : 'encerradas';
+    }
+
+    function normalizar(nome) {
+      return String(nome || '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+
+    function definirOcupado(ocupado) {
+      estado.ocupado = ocupado;
+      var podeEditar = !!(estado.contexto && estado.contexto.podeEditar && estado.contexto.listaOficialDisponivel);
+      ['diagramador', 'inicio', 'fim', 'observacoes', 'salvar'].forEach(function (id) {
+        el(id).disabled = ocupado || !podeEditar;
+      });
+      document.querySelectorAll('.periodo-acoes button').forEach(function (b) { b.disabled = ocupado; });
+    }
+
+    function preencherDiagramadores() {
+      var select = el('diagramador');
+      select.textContent = '';
+      var lista = estado.contexto.diagramadores || [];
+      var grupos = {};
+      lista.forEach(function (d) { (grupos[d.nucleo] = grupos[d.nucleo] || []).push(d.nome); });
+      Object.keys(grupos).sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); }).forEach(function (nucleo) {
+        var og = document.createElement('optgroup');
+        og.label = nucleo;
+        grupos[nucleo].sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); }).forEach(function (nome) {
+          var op = document.createElement('option');
+          op.value = nome;
+          op.textContent = nome;
+          og.appendChild(op);
+        });
+        select.appendChild(og);
+      });
+      // ?diagramador= só PRÉ-SELECIONA, e apenas se existir na lista oficial
+      var alvo = normalizar(estado.sugerido);
+      var achou = lista.filter(function (d) { return normalizar(d.nome) === alvo; })[0];
+      if (achou) select.value = achou.nome;
+    }
+
+    function renderizarHistorico() {
+      var lista = el('historico');
+      lista.textContent = '';
+      var nome = normalizar(el('diagramador').value);
+      var periodos = (estado.contexto.ferias || [])
+        .filter(function (p) { return normalizar(p.diagramador) === nome; })
+        .sort(function (a, b) { return a.inicio < b.inicio ? 1 : -1; });
+      if (!periodos.length) {
+        var vazio = document.createElement('li');
+        vazio.className = 'vazio';
+        vazio.textContent = 'Nenhum período registrado para este diagramador.';
+        lista.appendChild(vazio);
+        return;
+      }
+      periodos.forEach(function (p) {
+        var item = document.createElement('li');
+        item.className = 'periodo';
+        var topo = document.createElement('div');
+        topo.className = 'periodo-topo';
+        var datas = document.createElement('span');
+        datas.className = 'periodo-datas';
+        datas.textContent = formatarData(p.inicio) + ' a ' + formatarData(p.fim);
+        var selo = document.createElement('span');
+        selo.className = 'selo ' + classeSituacao(p.situacao);
+        selo.textContent = p.situacao;
+        topo.appendChild(datas);
+        topo.appendChild(selo);
+        item.appendChild(topo);
+        if (p.observacoes) {
+          var obs = document.createElement('p');
+          obs.className = 'periodo-obs';
+          obs.textContent = p.observacoes;
+          item.appendChild(obs);
+        }
+        if (p.registradoPor) {
+          var aud = document.createElement('p');
+          aud.className = 'periodo-auditoria';
+          aud.textContent = 'Registrado por ' + p.registradoPor;
+          item.appendChild(aud);
+        }
+        if (estado.contexto.podeEditar) {
+          var acoes = document.createElement('div');
+          acoes.className = 'periodo-acoes';
+          var editar = document.createElement('button');
+          editar.type = 'button';
+          editar.className = 'secundario';
+          editar.textContent = 'Editar';
+          editar.setAttribute('aria-label', 'Editar férias de ' + formatarData(p.inicio) + ' a ' + formatarData(p.fim));
+          editar.addEventListener('click', function () { iniciarEdicao(p); });
+          var excluir = document.createElement('button');
+          excluir.type = 'button';
+          excluir.className = 'perigo';
+          excluir.textContent = 'Excluir';
+          excluir.setAttribute('aria-label', 'Excluir férias de ' + formatarData(p.inicio) + ' a ' + formatarData(p.fim));
+          excluir.addEventListener('click', function () { excluirPeriodo(p); });
+          acoes.appendChild(editar);
+          acoes.appendChild(excluir);
+          item.appendChild(acoes);
+        }
+        lista.appendChild(item);
+      });
+    }
+
+    function limparFormulario() {
+      estado.editandoId = null;
+      el('inicio').value = '';
+      el('fim').value = '';
+      el('observacoes').value = '';
+      el('titulo-form').textContent = 'Novo período';
+      el('salvar').textContent = 'Salvar férias';
+      el('cancelar-edicao').hidden = true;
+    }
+
+    function iniciarEdicao(p) {
+      estado.editandoId = p.id;
+      el('diagramador').value = p.diagramador;
+      el('inicio').value = p.inicio;
+      el('fim').value = p.fim;
+      el('observacoes').value = p.observacoes || '';
+      el('titulo-form').textContent = 'Editar período';
+      el('salvar').textContent = 'Atualizar férias';
+      el('cancelar-edicao').hidden = false;
+      el('inicio').focus();
+    }
+
+    // Validação na tela (o servidor valida de novo, com lock)
+    function validarFormulario() {
+      var d = el('diagramador').value, ini = el('inicio').value, fim = el('fim').value;
+      if (!d) return 'Selecione o diagramador.';
+      if (!ini || !fim) return 'Informe a data de início e a data de término.';
+      if (fim < ini) return 'A data de término não pode ser anterior à data de início.';
+      var conflito = (estado.contexto.ferias || []).filter(function (p) {
+        return p.id !== estado.editandoId && normalizar(p.diagramador) === normalizar(d) && p.inicio <= fim && ini <= p.fim;
+      })[0];
+      if (conflito) return 'Já existe férias de ' + d + ' entre ' + formatarData(conflito.inicio) + ' e ' + formatarData(conflito.fim) + '.';
+      return '';
+    }
+
+    function chamarServidor(funcao, argumento, aoConcluir) {
+      definirOcupado(true);
+      google.script.run
+        .withSuccessHandler(function (r) { definirOcupado(false); aoConcluir(r); })
+        .withFailureHandler(function () {
+          definirOcupado(false);
+          mostrarMensagem('Falha de conexão com o servidor. Nada foi confirmado; tente novamente.', 'erro');
+        })[funcao](argumento);
+    }
+
+    function recarregar(mensagemSucesso) {
+      chamarServidor('obterContextoFerias', undefined, function (ctx) {
+        if (!ctx || ctx.sucesso !== true) {
+          mostrarMensagem((ctx && ctx.mensagem) || 'Resposta inesperada do servidor.', 'erro');
+          return;
+        }
+        var selecionado = el('diagramador').value;
+        estado.contexto = ctx;
+        aplicarContexto(selecionado);
+        if (mensagemSucesso) mostrarMensagem(mensagemSucesso, 'sucesso');
+      });
+    }
+
+    function aplicarContexto(manterSelecionado) {
+      var ctx = estado.contexto;
+      el('usuario').textContent = ctx.usuario ? 'Conectado como ' + ctx.usuario : 'Usuário não identificado';
+      preencherDiagramadores();
+      if (manterSelecionado) el('diagramador').value = manterSelecionado;
+      renderizarHistorico();
+      el('carregando').hidden = true;
+      el('conteudo').hidden = false;
+      definirOcupado(false);
+      if (!ctx.listaOficialDisponivel) {
+        mostrarMensagem('A lista oficial de diagramadores está indisponível no momento. A consulta funciona, mas o cadastro fica bloqueado.', 'erro');
+      } else if (!ctx.podeEditar) {
+        mostrarMensagem(ctx.motivo + ' Você pode apenas consultar os períodos.', 'info');
+      } else if (!ctx.auditoriaAtiva) {
+        mostrarMensagem('Auditoria desativada: a aba não tem a coluna Registrado_por.', 'info');
+      }
+    }
+
+    function salvar(evento) {
+      evento.preventDefault();
+      if (estado.ocupado) return;
+      var erro = validarFormulario();
+      if (erro) { mostrarMensagem(erro, 'erro'); return; }
+      var dados = {
+        diagramador: el('diagramador').value,
+        inicio: el('inicio').value,
+        fim: el('fim').value,
+        observacoes: el('observacoes').value.trim(),
+      };
+      var funcao = estado.editandoId ? 'atualizarFerias' : 'criarFerias';
+      if (estado.editandoId) dados.id = estado.editandoId;
+      mostrarMensagem('Salvando…', 'info');
+      chamarServidor(funcao, dados, function (r) {
+        // sucesso SOMENTE com confirmação inequívoca do servidor
+        if (r && r.sucesso === true && r.ferias && r.ferias.id) {
+          limparFormulario();
+          recarregar(r.mensagem || 'Férias salvas.');
+        } else {
+          mostrarMensagem((r && r.mensagem) || 'Resposta inesperada do servidor. Nada foi confirmado.', 'erro');
+        }
+      });
+    }
+
+    function excluirPeriodo(p) {
+      if (estado.ocupado) return;
+      var ok = window.confirm('Excluir as férias de ' + p.diagramador + ' de ' + formatarData(p.inicio) + ' a ' + formatarData(p.fim) + '?');
+      if (!ok) return;
+      chamarServidor('excluirFerias', { id: p.id }, function (r) {
+        if (r && r.sucesso === true && r.id === p.id) {
+          if (estado.editandoId === p.id) limparFormulario();
+          recarregar(r.mensagem || 'Férias excluídas.');
+        } else {
+          mostrarMensagem((r && r.mensagem) || 'Resposta inesperada do servidor. Nada foi confirmado.', 'erro');
+        }
+      });
+    }
+
+    el('form').addEventListener('submit', salvar);
+    el('cancelar-edicao').addEventListener('click', function () { limparFormulario(); mostrarMensagem('', 'info'); });
+    el('diagramador').addEventListener('change', function () { limparFormulario(); renderizarHistorico(); });
+
+    // ?diagramador=<nome> (vindo do Kanban) só pré-seleciona
+    google.script.url.getLocation(function (local) {
+      estado.sugerido = (local && local.parameter && local.parameter.diagramador) || '';
+      recarregar('');
+    });
+  </script>
+</body>
+</html>
