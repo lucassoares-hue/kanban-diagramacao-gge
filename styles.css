@@ -5796,3 +5796,774 @@ body.modo-equipe-diagramacao .team-showcase-view {
 @media (max-width: 600px) {
   .botao-voltar-animado { width: 108px; height: 44px; }
 }
+
+
+/* ===================== TEMA ESCURO — ÁREA OPERACIONAL DOS DIAGRAMADORES ===================== */
+/* Botão no canto direito do cabeçalho (visível só na tela operacional) */
+.btn-tema-operacional {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color var(--trans), border-color var(--trans);
+}
+
+.btn-tema-operacional[hidden] {
+  display: none;
+}
+
+.btn-tema-operacional:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.btn-tema-operacional:focus-visible {
+  outline: 2px solid #8cc4ff;
+  outline-offset: 2px;
+}
+
+.btn-tema-operacional .icone-tema-sol { display: none; }
+html[data-tema="escuro"] .btn-tema-operacional .icone-tema-lua { display: none; }
+html[data-tema="escuro"] .btn-tema-operacional .icone-tema-sol { display: block; }
+
+/* Escopo: só vale com a tela operacional ativa (body.modo-operacional) */
+html[data-tema="escuro"] body.modo-operacional {
+  --cinza-claro: #0e1a28;         /* fundo principal azul-preto */
+  --cinza-borda: #2a3d52;         /* bordas azul-acinzentadas */
+  --cinza-medio: #3a5068;
+  --cinza-texto: #c9d4e1;         /* texto secundário claro */
+  --azul-claro:  #17304a;
+  --borda-suave: rgba(150, 180, 210, 0.14);
+  --borda-suave-forte: rgba(150, 180, 210, 0.24);
+  --sombra-xs: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --sombra:    0 2px 8px rgba(0, 0, 0, 0.35);
+  --sombra-md: 0 6px 18px rgba(0, 0, 0, 0.45);
+  --tema-superficie: #142538;     /* cards, tabela, modais */
+  --tema-superficie-2: #1a2f46;   /* realces, cabeçalhos internos */
+  --tema-texto: #e8eef5;          /* texto principal branco suave */
+  background-color: var(--cinza-claro);
+  color: var(--cinza-texto);
+  color-scheme: dark;             /* calendários e listas nativos também escuros */
+}
+
+/* Cards Em processo / Atrasadas / Finalizadas (as faixas coloridas continuam) */
+html[data-tema="escuro"] body.modo-operacional .resumo-card {
+  background-color: var(--tema-superficie);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-numero {
+  color: var(--tema-texto);
+}
+
+/* Barra de ferramentas, filtros e botões */
+html[data-tema="escuro"] body.modo-operacional .acoes {
+  background: #0f1d2d;
+  border-bottom-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .filtros select,
+html[data-tema="escuro"] body.modo-operacional .filtros input,
+html[data-tema="escuro"] body.modo-operacional .seletor-linhas {
+  background-color: var(--tema-superficie);
+  color: var(--tema-texto);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .seletor-linhas-icone {
+  color: #8cc4ff;
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-primario.btn-acao-compacto {
+  color: #8cc4ff;
+  border-color: #3f78ad;
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-primario.btn-acao-compacto:hover {
+  background-color: #17304a;
+  color: #ffffff;
+  border-color: #6aa6dc;
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-secundario {
+  background-color: var(--tema-superficie-2);
+  color: var(--tema-texto);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-secundario:hover {
+  background-color: #22405f;
+}
+
+/* Tabela operacional */
+html[data-tema="escuro"] body.modo-operacional .tabela-nucleo {
+  background-color: var(--tema-superficie);
+}
+
+html[data-tema="escuro"] body.modo-operacional .tabela-nucleo tbody td {
+  border-bottom-color: #23364b;
+  color: var(--cinza-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .tabela-nucleo tbody tr.inicio-bloco td {
+  border-top-color: #3f6a92;
+}
+
+html[data-tema="escuro"] body.modo-operacional .td-diagramador {
+  background-color: #10202f;
+}
+
+html[data-tema="escuro"] body.modo-operacional .tabela-nucleo tbody tr.linha-preenchida:hover td,
+html[data-tema="escuro"] body.modo-operacional .tabela-nucleo tbody tr.linha-vazia:hover td,
+html[data-tema="escuro"] body.modo-operacional .tabela-nucleo tbody tr.linha-temporaria:hover td {
+  background-color: rgba(140, 196, 255, 0.06);
+}
+
+html[data-tema="escuro"] body.modo-operacional .linha-atrasada td {
+  background-color: rgba(214, 69, 69, 0.12);
+}
+
+html[data-tema="escuro"] body.modo-operacional .tabela-nucleo tbody tr.linha-temporaria td {
+  background-color: rgba(224, 164, 41, 0.10);
+}
+
+/* Células de edição, datas e seletores */
+html[data-tema="escuro"] body.modo-operacional .campo-tabela {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .campo-tabela:hover,
+html[data-tema="escuro"] body.modo-operacional .campo-tabela:focus {
+  background-color: var(--tema-superficie-2);
+  border-color: #3f6a92;
+}
+
+html[data-tema="escuro"] body.modo-operacional .campo-tabela option {
+  background-color: var(--tema-superficie);
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .atividade-select-texto {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .atividade-select-wrap:hover,
+html[data-tema="escuro"] body.modo-operacional .atividade-select-wrap:focus-within {
+  background-color: var(--tema-superficie-2);
+  border-color: #3f6a92;
+}
+
+/* Status: mesmas cores semânticas; "em processo" um pouco mais claro para destacar no fundo escuro */
+html[data-tema="escuro"] body.modo-operacional .etiqueta-status.status-em-processo,
+html[data-tema="escuro"] body.modo-operacional .selo-em-processo {
+  background-color: #2a6fb0;
+}
+
+html[data-tema="escuro"] body.modo-operacional .etiqueta-prioridade {
+  color: var(--cinza-texto);
+}
+
+/* Férias na coluna Diagramador */
+html[data-tema="escuro"] body.modo-operacional .btn-ferias {
+  background: #17304a;
+  border-color: #2f5579;
+  color: #b9dbff;
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-ferias:hover {
+  background: #1d3b5a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-ferias-programadas,
+html[data-tema="escuro"] body.modo-operacional .painel-ferias-programadas {
+  background: rgba(224, 164, 41, 0.14);
+  border-color: rgba(224, 164, 41, 0.45);
+  color: #f5cf7a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-ferias-em-ferias,
+html[data-tema="escuro"] body.modo-operacional .painel-ferias-em-ferias {
+  background: rgba(46, 158, 91, 0.14);
+  border-color: rgba(46, 158, 91, 0.45);
+  color: #8fe0b0;
+}
+
+html[data-tema="escuro"] body.modo-operacional .painel-ferias-trilho {
+  background: rgba(46, 158, 91, 0.25);
+}
+
+/* Modais abertos a partir da área operacional (atividades, FIM, férias) */
+html[data-tema="escuro"] body.modo-operacional .modal {
+  background-color: var(--tema-superficie);
+  color: var(--cinza-texto);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-overlay {
+  background-color: rgba(2, 8, 16, 0.7);
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-header {
+  border-bottom-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-header h2 {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-fechar:hover {
+  background-color: var(--tema-superficie-2);
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-form input,
+html[data-tema="escuro"] body.modo-operacional .modal-form select,
+html[data-tema="escuro"] body.modo-operacional .modal-form textarea {
+  background: #0f1d2d;
+  color: var(--tema-texto);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .conclusao-detalhes,
+html[data-tema="escuro"] body.modo-operacional .ferias-lista,
+html[data-tema="escuro"] body.modo-operacional .ferias-aviso {
+  background: #10202f;
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .conclusao-detalhes dd {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .conclusao-nova {
+  background: rgba(46, 158, 91, 0.16);
+  color: #8fe0b0;
+}
+
+html[data-tema="escuro"] body.modo-operacional .conclusao-anterior {
+  background: #10202f;
+}
+
+html[data-tema="escuro"] body.modo-operacional .conclusao-pendencias {
+  background: rgba(224, 164, 41, 0.14);
+  color: #f5cf7a;
+}
+
+/* Modal "Selecionar atividades" (cabeçalho azul-marinho mantido) */
+html[data-tema="escuro"] body.modo-operacional .modal-atividades-busca {
+  background: #0f1d2d;
+  color: var(--tema-texto);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-atividades-opcao {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-atividades-opcao:hover {
+  background: var(--tema-superficie-2);
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-atividades-opcao.marcada {
+  background: #1b3654;
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-atividades-caixa {
+  background: #0f1d2d;
+  border-color: #6c819a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-atividades-opcao input:checked + .modal-atividades-caixa {
+  border-color: #3f8fdc;
+  background-color: #2a6fb0;
+}
+
+html[data-tema="escuro"] body.modo-operacional .modal-atividades-rodape {
+  border-top-color: var(--cinza-borda);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-tema-operacional { transition: none; }
+}
+
+/* Coluna Diagramador e divisórias no tema escuro */
+html[data-tema="escuro"] body.modo-operacional .tabela-diagramador-nome {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .coluna-diagramador {
+  border-right-color: #2f4a66;
+}
+
+html[data-tema="escuro"] body.modo-operacional .tabela-nucleo tbody tr.inicio-bloco td {
+  box-shadow: inset 0 4px 0 #0e1a28; /* faixa entre blocos na cor do fundo escuro */
+}
+
+
+/* ===================== TEMA ESCURO — KANBAN VISUAL ===================== */
+html[data-tema="escuro"] body.modo-operacional .kanban-visual-titulo,
+html[data-tema="escuro"] body.modo-operacional .kanban-filtro-todos {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-visual-subtitulo {
+  color: var(--cinza-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-filtro-opcao {
+  background: var(--tema-superficie);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-filtro-opcao:hover,
+html[data-tema="escuro"] body.modo-operacional .kanban-filtro-opcao.ativo {
+  border-color: #3f8fdc;
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-filtro-iniciais {
+  background: #17304a;
+  color: #b9dbff;
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-coluna {
+  background-color: var(--tema-superficie);
+  border-color: var(--cinza-borda);
+}
+
+/* Etapas: mesmas cores, com Backlog/Em processo um pouco mais claros para destacar no escuro */
+html[data-tema="escuro"] body.modo-operacional .kanban-coluna-backlog .kanban-coluna-titulo {
+  background-color: #1f4a73;
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-coluna-emprocesso .kanban-coluna-titulo {
+  background-color: #2a6fb0;
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-coluna-pausado .kanban-coluna-titulo {
+  background-color: #c96a24;
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-coluna-prioridade .kanban-coluna-titulo {
+  background-color: #c48d1f;
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-coluna-finalizado .kanban-coluna-titulo {
+  background-color: #2a8a51;
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-item {
+  color: var(--tema-texto);
+  border-bottom-color: #23364b;
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-item:hover {
+  background-color: var(--tema-superficie-2);
+}
+
+html[data-tema="escuro"] body.modo-operacional .kanban-coluna-vazio {
+  color: rgba(201, 212, 225, 0.55);
+}
+
+/* ===================== TEMA ESCURO — RESUMO DOS NÚCLEOS ===================== */
+html[data-tema="escuro"] body.modo-operacional .tela-resumo-titulo,
+html[data-tema="escuro"] body.modo-operacional .demandas-criticas-titulo,
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-subtitulo {
+  color: var(--tema-texto);
+}
+
+/* Indicadores (a faixa colorida identifica cada card) */
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-card {
+  background: var(--tema-superficie);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-card-total,
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-card-ativos {
+  --cor-resumo-equipe: #3f8fdc; /* azul GGE clareado para contraste no escuro */
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-card-ferias {
+  --cor-resumo-equipe: #f0a63a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-numero {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-icone {
+  background: color-mix(in srgb, var(--cor-resumo-equipe) 20%, #142538);
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-aviso {
+  background: rgba(224, 164, 41, 0.14);
+  border-color: rgba(224, 164, 41, 0.45);
+  color: #f5cf7a;
+}
+
+/* Atividades atrasadas */
+html[data-tema="escuro"] body.modo-operacional .item-demanda-critica {
+  background-color: rgba(214, 69, 69, 0.12);
+  border-color: rgba(214, 69, 69, 0.40);
+  border-left-color: var(--vermelho);
+}
+
+html[data-tema="escuro"] body.modo-operacional .critica-atividade {
+  color: var(--tema-texto);
+}
+
+/* Quadros (livres / com atividade / férias) */
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-coluna {
+  background-color: var(--tema-superficie);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-coluna::-webkit-scrollbar-track {
+  background: #10202f;
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-coluna::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 196, 255, 0.30);
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-equipe-coluna-ferias {
+  border-top-color: #f0a63a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .grupo-livres-titulo,
+html[data-tema="escuro"] body.modo-operacional .grupo-atividade-titulo {
+  background: #17304a;
+  border-left-color: #3f8fdc;
+  color: #dbe9f7;
+}
+
+html[data-tema="escuro"] body.modo-operacional .item-diagramador {
+  background-color: #10202f;
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .item-diagramador-livre {
+  border-color: rgba(46, 158, 91, 0.45);
+}
+
+html[data-tema="escuro"] body.modo-operacional .item-diagramador-ocupado {
+  border-color: rgba(63, 143, 220, 0.40);
+}
+
+html[data-tema="escuro"] body.modo-operacional .item-diagramador-nome,
+html[data-tema="escuro"] body.modo-operacional .atividade-resumo-linha strong,
+html[data-tema="escuro"] body.modo-operacional .ferias-resumo-datas dd {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .selo-ferias {
+  background: rgba(240, 166, 58, 0.16);
+  border-color: rgba(240, 166, 58, 0.55);
+  color: #f5cf7a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .ferias-resumo-demandas {
+  color: #f5cf7a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .item-diagramador-avatar-fallback.ferias {
+  background: rgba(240, 166, 58, 0.22);
+  color: #f5cf7a;
+}
+
+/* Painel que envolve o Resumo dos Núcleos (era branco fixo) */
+html[data-tema="escuro"] body.modo-operacional .tela-resumo-nucleos {
+  background-color: #101e2e;
+  border-color: var(--cinza-borda);
+}
+
+
+/* ===================== CONTROLES DO CABEÇALHO (Relatórios · Performance · Tema) ===================== */
+/* O título já empurra tudo para a direita (margin-right: auto); o grupo fica junto, alinhado */
+.topbar-controles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.btn-tema-operacional:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-tema-operacional:disabled:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+@media (max-width: 900px) {
+  .topbar-controles { gap: 8px; }
+}
+
+/* Celular: o grupo inteiro vai para uma segunda linha, alinhado à direita (sem sobrepor o título) */
+@media (max-width: 600px) {
+  .topbar-controles {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .topbar-controles .btn-performance {
+    padding: 0 10px;
+  }
+}
+
+
+/* ===================== TEMA ESCURO — PERFORMANCE DOS NÚCLEOS ===================== */
+/* Cabeçalho da seção */
+html[data-tema="escuro"] body.modo-operacional .performance-titulo,
+html[data-tema="escuro"] body.modo-operacional .perf-secao-titulo,
+html[data-tema="escuro"] body.modo-operacional .perf-card-titulo {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-voltar-resumo {
+  background: transparent;
+  color: #8cc4ff;
+  border-color: #3f78ad;
+}
+
+html[data-tema="escuro"] body.modo-operacional .btn-voltar-resumo:hover {
+  background: #17304a;
+  color: #ffffff;
+}
+
+/* Indicadores (barras laterais coloridas mantidas) */
+html[data-tema="escuro"] body.modo-operacional .resumo-geral-cards .resumo-card {
+  background-color: var(--tema-superficie);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-geral-cards .resumo-processo {
+  border-left-color: #2a6fb0;
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-geral-cards .resumo-card.resumo-card-tempo {
+  border-left-color: #3f8fdc;
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-geral-cards .resumo-card-destaque {
+  background-color: rgba(214, 69, 69, 0.14);
+  border-left-color: var(--vermelho);
+}
+
+html[data-tema="escuro"] body.modo-operacional .resumo-geral-cards .resumo-card-destaque .resumo-numero {
+  color: #ff8a8a;
+}
+
+/* Cards dos gráficos, ranking e tabela */
+html[data-tema="escuro"] body.modo-operacional .perf-card {
+  background: var(--tema-superficie);
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-barra-rotulo,
+html[data-tema="escuro"] body.modo-operacional .perf-barra-valor,
+html[data-tema="escuro"] body.modo-operacional .perf-legenda-rotulo,
+html[data-tema="escuro"] body.modo-operacional .perf-legenda-valor,
+html[data-tema="escuro"] body.modo-operacional .perf-pizza-painel-nome,
+html[data-tema="escuro"] body.modo-operacional .perf-pizza-painel-pct {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-barra {
+  background: #3f8fdc;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-legenda-item:hover:not(:disabled) {
+  background: var(--tema-superficie-2);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-legenda-item.ativo {
+  background: #17304a;
+  border-color: #2f5579;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-pizza-painel {
+  background: #10202f;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-pizza-sombra {
+  fill: rgba(0, 0, 0, 0.45);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-pizza-lateral {
+  stroke: rgba(20, 37, 56, 0.9);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-pizza-fatia:focus-visible .perf-pizza-topo {
+  stroke: #8cc4ff;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-tabela th {
+  background: #10202f;
+  border-bottom-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-ordenar {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-ordenar:hover {
+  background: var(--tema-superficie-2);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-tabela td {
+  border-bottom-color: #23364b;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-tabela td.perf-col-nome {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-tabela tbody tr:hover td {
+  background: rgba(140, 196, 255, 0.06);
+}
+
+/* Mapa de calor: cores semânticas mantidas; só os neutros escurecem */
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-filtro select {
+  background-color: #0f1d2d;
+  border-color: var(--cinza-borda);
+  color: #8cc4ff;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-canto {
+  background: var(--tema-superficie);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-nome,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-celula {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-celula.perf-mapa-concluidas:not(.perf-mapa-celula-escura) {
+  color: #0b3d6b; /* número escuro sobre os azuis claros da escala (contraste original) */
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-execucao,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-sem-registro,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-ferias {
+  color: #0b2e4f;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-fim-de-semana,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-feriado,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-futuro {
+  background: #23364b;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-dia-semana,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-legenda-nota {
+  color: #8fa3b8;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-dom {
+  background: #1a2f46;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-dom .perf-mapa-dia-semana {
+  color: #a9c1d9;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela td.perf-mapa-dom {
+  background: #132538;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela td.perf-mapa-dom .perf-mapa-fim-de-semana {
+  background: #2a4058;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.heatmap-dia-atual {
+  background: #1d3b5a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.heatmap-dia-atual .perf-mapa-dia-numero,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.heatmap-dia-atual .perf-mapa-dia-semana {
+  color: #8cc4ff;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-cab-feriado .perf-mapa-dia-numero,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-cab-feriado .perf-mapa-dia-semana {
+  color: #7f8fa3;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-ferias-aviso {
+  background: rgba(224, 164, 41, 0.14);
+  color: #f5cf7a;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-dica {
+  background: #0a1724;
+  border: 1px solid var(--cinza-borda);
+}
+
+/* Modal de detalhamento do mapa (cabeçalho azul-marinho mantido) */
+html[data-tema="escuro"] body.modo-operacional .mapa-detalhe-resumo div {
+  background: #10202f;
+  border-color: var(--cinza-borda);
+}
+
+html[data-tema="escuro"] body.modo-operacional .mapa-detalhe-resumo strong,
+html[data-tema="escuro"] body.modo-operacional .mapa-detalhe-secao,
+html[data-tema="escuro"] body.modo-operacional .mapa-detalhe-card h4,
+html[data-tema="escuro"] body.modo-operacional .mapa-detalhe-card dd {
+  color: var(--tema-texto);
+}
+
+html[data-tema="escuro"] body.modo-operacional .mapa-detalhe-card {
+  background: #10202f;
+  border-color: var(--cinza-borda);
+  border-left-color: #3f8fdc;
+}
+
+html[data-tema="escuro"] body.modo-operacional .mapa-detalhe-nota {
+  color: #8fe0b0;
+}
+
+html[data-tema="escuro"] body.modo-operacional .mapa-detalhe-aviso {
+  background: rgba(224, 164, 41, 0.14);
+  color: #f5cf7a;
+}
+
+/* Mapa de calor: coluna fixa dos nomes e faixas de sábado/domingo no escuro */
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-nome,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-canto {
+  background: var(--tema-superficie);
+  box-shadow: 3px 0 0 var(--tema-superficie);
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-sab,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-dom {
+  background: #1a2f46;
+  box-shadow: 0 0 0 3px #1a2f46;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-sab .perf-mapa-dia-numero,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-sab .perf-mapa-dia-semana,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-dom .perf-mapa-dia-numero,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela thead th.perf-mapa-dom .perf-mapa-dia-semana {
+  color: #a9c1d9;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela td.perf-mapa-sab,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela td.perf-mapa-dom {
+  background: #132538;
+  box-shadow: 0 0 0 3px #132538;
+}
+
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela td.perf-mapa-sab .perf-mapa-fim-de-semana,
+html[data-tema="escuro"] body.modo-operacional .perf-mapa-tabela td.perf-mapa-dom .perf-mapa-fim-de-semana {
+  background: #2a4058;
+}

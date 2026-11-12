@@ -1844,6 +1844,56 @@ function renderizarTabela() {
 // Mostra a tela correspondente a `telaAtual` ("resumo", "tabela" ou "kanban") e recalcula
 // o conteúdo das três telas, garantindo que tudo fique atualizado independente de qual
 // tela está visível no momento (ex: criar uma demanda atualiza o resumo mesmo estando na tabela).
+// ===================== TEMA CLARO/ESCURO (área operacional) ===================== //
+// Só visual: troca o atributo data-tema do <html> (o CSS escuro vale apenas com
+// body.modo-operacional). Não re-renderiza a tabela, não toca nos campos em edição e não
+// grava nada na planilha. localStorage guarda SÓ "claro"/"escuro" (chave sem "kanban",
+// para não ser apagada pela limpeza do cache local na inicialização).
+const CHAVE_TEMA_OPERACIONAL = "sgge-tema-operacional";
+
+function temaOperacionalAtual() {
+  return document.documentElement.getAttribute("data-tema") === "escuro" ? "escuro" : "claro";
+}
+
+function aplicarTemaOperacional(tema) {
+  if (tema === "escuro") document.documentElement.setAttribute("data-tema", "escuro");
+  else document.documentElement.removeAttribute("data-tema");
+  const botao = document.getElementById("btn-tema-operacional");
+  if (botao) {
+    const rotulo = tema === "escuro" ? "Ativar modo claro" : "Ativar modo escuro";
+    botao.setAttribute("aria-label", rotulo);
+    botao.title = rotulo;
+    botao.setAttribute("aria-pressed", String(tema === "escuro"));
+  }
+}
+
+// Telas que usam o tema (mesma preferência para todas): tabela operacional, Kanban Visual,
+// Resumo dos Núcleos e Performance. A Equipe de Diagramação continua no tema claro.
+function telaUsaTemaOperacional() {
+  if (telaAtual === "tabela" || telaAtual === "kanban") return true;
+  return telaAtual === "resumo" && visualizacaoResumoAtiva !== "equipe-diagramacao";
+}
+
+function atualizarEscopoTemaOperacional() {
+  const ativo = telaUsaTemaOperacional();
+  document.body.classList.toggle("modo-operacional", ativo);
+  const botao = document.getElementById("btn-tema-operacional");
+  if (!botao) return;
+  botao.hidden = !ativo;
+  aplicarTemaOperacional(temaOperacionalAtual()); // rótulo/ícone sempre sincronizados
+}
+
+function configurarTemaOperacional() {
+  const botao = document.getElementById("btn-tema-operacional");
+  if (!botao) return;
+  aplicarTemaOperacional(temaOperacionalAtual()); // sincroniza o botão com o que o <head> aplicou
+  botao.addEventListener("click", () => {
+    const novo = temaOperacionalAtual() === "escuro" ? "claro" : "escuro";
+    aplicarTemaOperacional(novo);
+    try { localStorage.setItem(CHAVE_TEMA_OPERACIONAL, novo); } catch (erro) { /* preferência só nesta sessão */ }
+  });
+}
+
 function renderizarTela() {
   document.getElementById("tela-inicio").classList.toggle("oculto", telaAtual !== "inicio");
   // No portal, os botões de navegação do cabeçalho ficam ocultos (as opções estão nos cards)
@@ -1858,6 +1908,7 @@ function renderizarTela() {
     if (telaAtual !== "resumo") abrirMenuRelatorios(false);
   }
   document.getElementById("tela-operacional").classList.toggle("oculto", telaAtual !== "tabela");
+  atualizarEscopoTemaOperacional();
   document.getElementById("tela-kanban-visual").classList.toggle("oculto", telaAtual !== "kanban");
 
   // O filtro "Diagramador" depende do núcleo selecionado, então é repopulado
@@ -4212,6 +4263,11 @@ function atualizarVisualizacaoResumoAtiva() {
     ?.classList.toggle("ativo", aba === "equipe");
   document.getElementById("btn-performance")
     ?.classList.toggle("ativo", aba === "performance");
+  const botaoPerformance = document.getElementById("btn-performance");
+  if (botaoPerformance) {
+    if (aba === "performance") botaoPerformance.setAttribute("aria-current", "page");
+    else botaoPerformance.removeAttribute("aria-current");
+  }
   // Os botões "Kanban Visual Geral" e "Equipe de Diagramação" saíram do Resumo; as
   // visões continuam existindo (a Equipe é aberta pelo portal), por isso o ?.
   document.getElementById("btn-kanban-visual-geral")
@@ -4224,6 +4280,7 @@ function atualizarVisualizacaoResumoAtiva() {
   // Os elementos internos abaixo são ocultados via JS (.oculto) pois estão
   // dentro do mesmo container e precisam sumir independente do CSS do body.
   document.body.classList.toggle("modo-equipe-diagramacao", ehEquipeDiagramacao);
+  atualizarEscopoTemaOperacional(); // Performance/Equipe ficam no tema claro
 
   // Título + cards de diagramadores do Resumo: ocultos na Equipe e na Performance
   // (a Performance tem título e cards próprios)
@@ -5313,6 +5370,7 @@ function configurarEventos() {
   // e "Voltar ao Resumo": alternam visões internas do Resumo, sem recarregar a página
   document.getElementById("btn-performance").addEventListener("click", () => {
     if (telaAtual !== "resumo") return;
+    if (visualizacaoResumoAtiva === "performance") return; // já está na Performance: nada a refazer (filtros intactos)
     irParaVisualizacaoResumo("performance");
     window.scrollTo(0, 0);
   });
@@ -5323,6 +5381,7 @@ function configurarEventos() {
   configurarTooltipMapaCalor();
   configurarDetalheMapaCalor();
   configurarModalAtividades();
+  configurarTemaOperacional();
 
   document.getElementById("btn-voltar-resumo").addEventListener("click", () => {
     irParaVisualizacaoResumo("equipe");
