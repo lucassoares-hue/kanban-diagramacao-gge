@@ -904,6 +904,29 @@ function criarCelulaComSelect(contexto, campo, opcoes) {
   return celula;
 }
 
+// Célula FRENTE: mesmo select nativo (mesma lista, mesmo salvamento), mas o valor escolhido
+// é exibido num texto que quebra linha, para nomes longos não ficarem cortados. O select
+// fica sobreposto e invisível, recebendo clique e teclado (padrão já usado na ATIVIDADE).
+function criarCelulaFrente(contexto, opcoes) {
+  const celula = document.createElement("td");
+  celula.className = "col-frente";
+  const wrapper = document.createElement("div");
+  wrapper.className = "atividade-select-wrap frente-select-wrap";
+  const texto = document.createElement("span");
+  texto.className = "atividade-select-texto";
+  texto.setAttribute("aria-hidden", "true");
+  const select = criarSelectTabela(obterValorCampoContexto(contexto, "frente"), opcoes, (novoValor) => {
+    texto.textContent = novoValor;
+    salvarCampoDemanda(contexto, "frente", novoValor);
+  });
+  select.classList.add("select-frente");
+  select.setAttribute("aria-label", "Frente");
+  texto.textContent = select.value;
+  wrapper.append(texto, select);
+  celula.appendChild(wrapper);
+  return celula;
+}
+
 // ===================== COLUNA ATIVIDADE: SELEÇÃO MÚLTIPLA ===================== //
 // Uma demanda (uma linha da BASE_DEMANDAS) pode ter várias atividades. Elas ficam na MESMA
 // célula ATIVIDADE, em texto: "Atividade 1 : Atividade 2" (ordem de seleção, sem repetir).
@@ -1787,7 +1810,7 @@ function renderizarTabela() {
 
       linha.appendChild(criarCelulaComSelect(contexto, "anoEscolar", opcoesAnoEscolar));
       linha.appendChild(criarCelulaComSelect(contexto, "modulo", opcoesModulo));
-      linha.appendChild(criarCelulaComSelect(contexto, "frente", opcoesFrente));
+      linha.appendChild(criarCelulaFrente(contexto, opcoesFrente));
       linha.appendChild(criarCelulaAtividadeTabela(contexto, opcoesAtividade));
       linha.appendChild(criarCelulaComInputData(contexto, "inicio"));
       linha.appendChild(criarCelulaComInputData(contexto, "previsto"));
